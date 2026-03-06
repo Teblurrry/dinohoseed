@@ -1,0 +1,842 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dino Flower Home - Version 1</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f7f1e8;
+      color: #3d2f2f;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .app {
+      width: 960px;
+      max-width: 100%;
+    }
+
+    .panel {
+      background: #fffaf4;
+      border: 2px solid #d8c3a5;
+      border-radius: 16px;
+      padding: 16px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+    }
+
+    h1, h2, p {
+      margin-top: 0;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 12px;
+    }
+
+    .stats {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .badge {
+      background: #f3e5d0;
+      border: 1px solid #d8c3a5;
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-weight: bold;
+    }
+
+    .btn {
+      border: none;
+      border-radius: 12px;
+      padding: 10px 16px;
+      background: #7bb661;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+      transition: transform 0.1s ease, opacity 0.2s ease;
+    }
+
+    .btn:hover {
+      transform: translateY(-1px);
+    }
+
+    .btn.secondary {
+      background: #8c7ae6;
+    }
+
+    .btn.ghost {
+      background: #d8c3a5;
+      color: #3d2f2f;
+    }
+
+    canvas {
+      width: 100%;
+      background: linear-gradient(to bottom, #dff5ff 0%, #e9fbff 60%, #f6ead7 60%, #f6ead7 100%);
+      border: 2px solid #d8c3a5;
+      border-radius: 16px;
+      display: block;
+    }
+
+    .help {
+      margin-top: 10px;
+      font-size: 14px;
+      color: #6b5a4a;
+    }
+
+    .garden {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 14px;
+      margin-top: 16px;
+    }
+
+    .plot {
+      height: 150px;
+      border: 2px dashed #c8a97e;
+      border-radius: 16px;
+      background: linear-gradient(to top, #8b5a2b 0 28%, #dff3d8 28% 100%);
+      position: relative;
+      cursor: pointer;
+      overflow: hidden;
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .plot:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 18px rgba(0, 0, 0, 0.08);
+    }
+
+    .plot.locked {
+      cursor: not-allowed;
+      opacity: 0.5;
+      filter: grayscale(0.3);
+    }
+
+    .plot-label {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      font-size: 13px;
+      font-weight: bold;
+      background: rgba(255,255,255,0.8);
+      padding: 4px 8px;
+      border-radius: 999px;
+    }
+
+    .flower {
+      position: absolute;
+      left: 50%;
+      bottom: 28%;
+      transform: translateX(-50%);
+      display: flex;
+      align-items: center;
+      flex-direction: column;
+      pointer-events: none;
+    }
+
+    .stem {
+      width: 6px;
+      background: #3f9b4b;
+      border-radius: 8px;
+    }
+
+    .bloom {
+      border-radius: 50%;
+      margin-bottom: -4px;
+      border: 2px solid rgba(255,255,255,0.7);
+    }
+
+    .leaves {
+      position: absolute;
+      top: 35%;
+      width: 38px;
+      height: 18px;
+    }
+
+    .leaf {
+      position: absolute;
+      width: 16px;
+      height: 10px;
+      background: #4caf50;
+      border-radius: 50% 50% 50% 50%;
+      top: 4px;
+    }
+
+    .leaf.left {
+      left: 0;
+      transform: rotate(-30deg);
+    }
+
+    .leaf.right {
+      right: 0;
+      transform: rotate(30deg);
+    }
+
+    .empty-note,
+    .locked-note {
+      position: absolute;
+      bottom: 12px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 90%;
+      text-align: center;
+      font-size: 13px;
+      background: rgba(255,255,255,0.75);
+      padding: 6px 8px;
+      border-radius: 10px;
+    }
+
+    .footer-row {
+      margin-top: 18px;
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .tiny {
+      font-size: 13px;
+      color: #6b5a4a;
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <div id="runScreen" class="panel">
+      <div class="topbar">
+        <div>
+          <h1>Dino Flower Home</h1>
+          <p>Run together, collect seeds, then bring them home to plant.</p>
+        </div>
+        <button id="goHomeBtn" class="btn secondary">Go Home</button>
+      </div>
+
+      <div class="stats">
+        <div class="badge">Seeds This Run: <span id="runSeeds">0</span></div>
+        <div class="badge">Stored Seeds: <span id="storedSeeds">0</span></div>
+        <div class="badge">Flowers Bloomed: <span id="flowersBloomed">0</span></div>
+      </div>
+
+      <div style="margin-top: 14px;">
+        <canvas id="gameCanvas" width="900" height="360"></canvas>
+      </div>
+
+      <div class="help">
+        Controls: <b>Space</b> / <b>↑</b> jump, <b>↓</b> duck, <b>R</b> restart after game over
+      </div>
+    </div>
+
+    <div id="homeScreen" class="panel hidden">
+      <div class="topbar">
+        <div>
+          <h2>Home Garden</h2>
+          <p>Click an empty plot to plant one seed. Flowers grow when you finish more runs.</p>
+        </div>
+        <button id="startRunBtn" class="btn">Start New Run</button>
+      </div>
+
+      <div class="stats">
+        <div class="badge">Stored Seeds: <span id="homeStoredSeeds">0</span></div>
+        <div class="badge">Unlocked Plots: <span id="unlockedPlots">0</span></div>
+        <div class="badge">Flowers Bloomed: <span id="homeFlowersBloomed">0</span></div>
+      </div>
+
+      <div id="garden" class="garden"></div>
+
+      <div class="footer-row">
+        <button id="advanceGrowthBtn" class="btn ghost">Grow Flowers Once</button>
+      </div>
+      <p class="tiny">
+        Unlock rule: the more flowers you plant/bloom, the more plots open up.
+      </p>
+    </div>
+  </div>
+
+  <script>
+    const runScreen = document.getElementById("runScreen");
+    const homeScreen = document.getElementById("homeScreen");
+    const goHomeBtn = document.getElementById("goHomeBtn");
+    const startRunBtn = document.getElementById("startRunBtn");
+    const advanceGrowthBtn = document.getElementById("advanceGrowthBtn");
+
+    const runSeedsEl = document.getElementById("runSeeds");
+    const storedSeedsEl = document.getElementById("storedSeeds");
+    const flowersBloomedEl = document.getElementById("flowersBloomed");
+
+    const homeStoredSeedsEl = document.getElementById("homeStoredSeeds");
+    const unlockedPlotsEl = document.getElementById("unlockedPlots");
+    const homeFlowersBloomedEl = document.getElementById("homeFlowersBloomed");
+    const gardenEl = document.getElementById("garden");
+
+    const canvas = document.getElementById("gameCanvas");
+    const ctx = canvas.getContext("2d");
+
+    const GAME = {
+      width: canvas.width,
+      height: canvas.height,
+      groundY: 290,
+      speed: 5,
+      gravity: 0.7,
+      jumpPower: -13,
+      ducking: false,
+      playing: true,
+      gameOver: false,
+      distance: 0,
+      runSeeds: 0,
+      obstacles: [],
+      seeds: [],
+      clouds: [],
+      nextObstacleTimer: 0,
+      nextSeedTimer: 0
+    };
+
+    const STATE = {
+      storedSeeds: 0,
+      totalFlowersBloomed: 0,
+      totalFlowersPlanted: 0,
+      runCount: 0,
+      plots: [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ]
+    };
+
+    const dinoA = createDino(120, "#5c4b8a");
+    const dinoB = createDino(170, "#d97b66");
+
+    function createDino(x, color) {
+      return {
+        x,
+        y: GAME.groundY - 42,
+        width: 36,
+        height: 42,
+        vy: 0,
+        onGround: true,
+        color,
+        legPhase: 0
+      };
+    }
+
+    function resetRun() {
+      GAME.speed = 5;
+      GAME.gravity = 0.7;
+      GAME.ducking = false;
+      GAME.playing = true;
+      GAME.gameOver = false;
+      GAME.distance = 0;
+      GAME.runSeeds = 0;
+      GAME.obstacles = [];
+      GAME.seeds = [];
+      GAME.nextObstacleTimer = 80;
+      GAME.nextSeedTimer = 50;
+
+      dinoA.y = GAME.groundY - 42;
+      dinoB.y = GAME.groundY - 42;
+      dinoA.width = 36;
+      dinoA.height = 42;
+      dinoB.width = 36;
+      dinoB.height = 42;
+      dinoA.vy = 0;
+      dinoB.vy = 0;
+      dinoA.onGround = true;
+      dinoB.onGround = true;
+
+      updateStats();
+    }
+
+    function updateStats() {
+      runSeedsEl.textContent = GAME.runSeeds;
+      storedSeedsEl.textContent = STATE.storedSeeds;
+      flowersBloomedEl.textContent = STATE.totalFlowersBloomed;
+
+      homeStoredSeedsEl.textContent = STATE.storedSeeds;
+      homeFlowersBloomedEl.textContent = STATE.totalFlowersBloomed;
+      unlockedPlotsEl.textContent = getUnlockedPlotsCount();
+    }
+
+    function getUnlockedPlotsCount() {
+      return Math.min(STATE.plots.length, 2 + Math.floor(STATE.totalFlowersPlanted / 2) + Math.floor(STATE.totalFlowersBloomed / 2));
+    }
+
+    function showRunScreen() {
+      runScreen.classList.remove("hidden");
+      homeScreen.classList.add("hidden");
+      updateStats();
+    }
+
+    function showHomeScreen() {
+      runScreen.classList.add("hidden");
+      homeScreen.classList.remove("hidden");
+      advanceFlowerGrowth();
+      renderGarden();
+      updateStats();
+    }
+
+    function jump() {
+      if (!GAME.playing) return;
+      if (dinoA.onGround && dinoB.onGround) {
+        dinoA.vy = GAME.jumpPower;
+        dinoB.vy = GAME.jumpPower;
+        dinoA.onGround = false;
+        dinoB.onGround = false;
+      }
+    }
+
+    function setDuck(isDucking) {
+      GAME.ducking = isDucking;
+      if (dinoA.onGround && dinoB.onGround) {
+        if (isDucking) {
+          dinoA.height = 26;
+          dinoB.height = 26;
+          dinoA.width = 44;
+          dinoB.width = 44;
+          dinoA.y = GAME.groundY - dinoA.height;
+          dinoB.y = GAME.groundY - dinoB.height;
+        } else {
+          dinoA.height = 42;
+          dinoB.height = 42;
+          dinoA.width = 36;
+          dinoB.width = 36;
+          dinoA.y = GAME.groundY - dinoA.height;
+          dinoB.y = GAME.groundY - dinoB.height;
+        }
+      }
+    }
+
+    function spawnObstacle() {
+      const tall = Math.random() > 0.5;
+      GAME.obstacles.push({
+        x: GAME.width + 30,
+        y: tall ? GAME.groundY - 50 : GAME.groundY - 30,
+        width: tall ? 24 : 34,
+        height: tall ? 50 : 30,
+        type: tall ? "rock" : "log"
+      });
+    }
+
+    function spawnSeed() {
+      GAME.seeds.push({
+        x: GAME.width + 20,
+        y: GAME.groundY - 75 - Math.random() * 45,
+        width: 18,
+        height: 18,
+        collected: false
+      });
+    }
+
+    function rectsOverlap(a, b) {
+      return (
+        a.x < b.x + b.width &&
+        a.x + a.width > b.x &&
+        a.y < b.y + b.height &&
+        a.y + a.height > b.y
+      );
+    }
+
+    function updateDino(dino) {
+      dino.vy += GAME.gravity;
+      dino.y += dino.vy;
+
+      const groundLevel = GAME.groundY - dino.height;
+      if (dino.y >= groundLevel) {
+        dino.y = groundLevel;
+        dino.vy = 0;
+        dino.onGround = true;
+      } else {
+        dino.onGround = false;
+      }
+
+      dino.legPhase += 0.2;
+    }
+
+    function endRun() {
+      GAME.playing = false;
+      GAME.gameOver = true;
+      STATE.storedSeeds += GAME.runSeeds;
+      STATE.runCount += 1;
+      updateStats();
+    }
+
+    function advanceFlowerGrowth() {
+      let bloomedNow = 0;
+
+      STATE.plots = STATE.plots.map(plot => {
+        if (!plot) return null;
+        if (plot.stage < 3) {
+          const next = { ...plot, stage: plot.stage + 1 };
+          if (next.stage === 3 && plot.stage < 3) bloomedNow++;
+          return next;
+        }
+        return plot;
+      });
+
+      STATE.totalFlowersBloomed += bloomedNow;
+    }
+
+    function plantSeed(plotIndex) {
+      const unlocked = getUnlockedPlotsCount();
+      if (plotIndex >= unlocked) return;
+      if (STATE.storedSeeds <= 0) return;
+      if (STATE.plots[plotIndex] !== null) return;
+
+      const flowerColors = ["#ff7aa2", "#ffd166", "#c77dff", "#ff9f1c", "#7bd389", "#ff6b6b"];
+      const color = flowerColors[Math.floor(Math.random() * flowerColors.length)];
+
+      STATE.plots[plotIndex] = {
+        stage: 0,
+        color
+      };
+      STATE.storedSeeds -= 1;
+      STATE.totalFlowersPlanted += 1;
+
+      renderGarden();
+      updateStats();
+    }
+
+    function renderGarden() {
+      gardenEl.innerHTML = "";
+      const unlocked = getUnlockedPlotsCount();
+
+      STATE.plots.forEach((plot, index) => {
+        const plotEl = document.createElement("div");
+        plotEl.className = "plot" + (index >= unlocked ? " locked" : "");
+        plotEl.addEventListener("click", () => plantSeed(index));
+
+        const label = document.createElement("div");
+        label.className = "plot-label";
+        label.textContent = "Plot " + (index + 1);
+        plotEl.appendChild(label);
+
+        if (index >= unlocked) {
+          const lockedNote = document.createElement("div");
+          lockedNote.className = "locked-note";
+          lockedNote.textContent = "Locked — grow more flowers";
+          plotEl.appendChild(lockedNote);
+        } else if (!plot) {
+          const emptyNote = document.createElement("div");
+          emptyNote.className = "empty-note";
+          emptyNote.textContent = STATE.storedSeeds > 0 ? "Click to plant a seed" : "No seed available";
+          plotEl.appendChild(emptyNote);
+        } else {
+          const flower = document.createElement("div");
+          flower.className = "flower";
+
+          const bloom = document.createElement("div");
+          bloom.className = "bloom";
+
+          const stem = document.createElement("div");
+          stem.className = "stem";
+
+          const leaves = document.createElement("div");
+          leaves.className = "leaves";
+
+          const leafLeft = document.createElement("div");
+          leafLeft.className = "leaf left";
+
+          const leafRight = document.createElement("div");
+          leafRight.className = "leaf right";
+
+          leaves.appendChild(leafLeft);
+          leaves.appendChild(leafRight);
+
+          if (plot.stage === 0) {
+            bloom.style.width = "12px";
+            bloom.style.height = "12px";
+            bloom.style.background = "#8b5a2b";
+            stem.style.height = "6px";
+            leaves.style.display = "none";
+          } else if (plot.stage === 1) {
+            bloom.style.width = "10px";
+            bloom.style.height = "10px";
+            bloom.style.background = "#6cc24a";
+            stem.style.height = "28px";
+          } else if (plot.stage === 2) {
+            bloom.style.width = "18px";
+            bloom.style.height = "18px";
+            bloom.style.background = plot.color;
+            stem.style.height = "44px";
+          } else {
+            bloom.style.width = "28px";
+            bloom.style.height = "28px";
+            bloom.style.background = plot.color;
+            stem.style.height = "58px";
+          }
+
+          flower.appendChild(bloom);
+          flower.appendChild(leaves);
+          flower.appendChild(stem);
+          plotEl.appendChild(flower);
+        }
+
+        gardenEl.appendChild(plotEl);
+      });
+    }
+
+    function drawBackground() {
+      ctx.fillStyle = "#ffffff";
+      ctx.fillRect(0, 0, GAME.width, GAME.height);
+
+      const sky = ctx.createLinearGradient(0, 0, 0, GAME.height);
+      sky.addColorStop(0, "#dff5ff");
+      sky.addColorStop(0.65, "#f9fdff");
+      sky.addColorStop(0.651, "#f5ead7");
+      sky.addColorStop(1, "#f0ddc2");
+      ctx.fillStyle = sky;
+      ctx.fillRect(0, 0, GAME.width, GAME.height);
+
+      ctx.fillStyle = "#c7edb6";
+      ctx.fillRect(0, GAME.groundY, GAME.width, GAME.height - GAME.groundY);
+
+      ctx.strokeStyle = "#9bcf8a";
+      ctx.lineWidth = 2;
+      for (let i = 0; i < GAME.width; i += 40) {
+        ctx.beginPath();
+        ctx.moveTo(i - (GAME.distance % 40), GAME.groundY + 12);
+        ctx.lineTo(i + 18 - (GAME.distance % 40), GAME.groundY + 12);
+        ctx.stroke();
+      }
+
+      ctx.fillStyle = "#fff";
+      drawCloud(120 - (GAME.distance * 0.2 % 1000), 70, 1);
+      drawCloud(420 - (GAME.distance * 0.15 % 1100), 50, 0.9);
+      drawCloud(760 - (GAME.distance * 0.25 % 1200), 90, 1.1);
+
+      ctx.fillStyle = "#d2b48c";
+      ctx.fillRect(0, GAME.groundY - 2, GAME.width, 4);
+    }
+
+    function drawCloud(x, y, scale) {
+      ctx.save();
+      ctx.translate(x, y);
+      ctx.scale(scale, scale);
+      ctx.beginPath();
+      ctx.arc(0, 0, 16, 0, Math.PI * 2);
+      ctx.arc(18, -8, 20, 0, Math.PI * 2);
+      ctx.arc(42, 0, 16, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+    }
+
+    function drawDino(dino, facingOffset = 0) {
+      ctx.save();
+      ctx.translate(dino.x + facingOffset, dino.y);
+
+      ctx.fillStyle = dino.color;
+      ctx.fillRect(0, 10, dino.width, dino.height - 10);
+
+      ctx.fillRect(dino.width - 4, 0, 20, 18);
+
+      ctx.fillStyle = "#fff";
+      ctx.fillRect(dino.width + 8, 5, 5, 5);
+
+      ctx.fillStyle = "#333";
+      ctx.fillRect(dino.width + 10, 7, 2, 2);
+
+      ctx.fillStyle = dino.color;
+      ctx.fillRect(-12, 14, 12, 8);
+
+      const legOffset = Math.sin(dino.legPhase) * 3;
+      ctx.fillRect(6, dino.height - 2, 6, 14 + legOffset);
+      ctx.fillRect(dino.width - 12, dino.height - 2, 6, 14 - legOffset);
+
+      ctx.restore();
+    }
+
+    function drawSeed(seed) {
+      ctx.save();
+      ctx.translate(seed.x, seed.y);
+
+      ctx.fillStyle = "#7a4a24";
+      ctx.beginPath();
+      ctx.ellipse(0, 0, 7, 9, 0, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.strokeStyle = "#3f9b4b";
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(6, 2);
+      ctx.lineTo(14, -10);
+      ctx.stroke();
+
+      ctx.fillStyle = "#67c96b";
+      ctx.beginPath();
+      ctx.ellipse(16, -12, 6, 3, -0.4, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.restore();
+    }
+
+    function drawObstacle(obs) {
+      if (obs.type === "rock") {
+        ctx.fillStyle = "#7d7d7d";
+        ctx.beginPath();
+        ctx.moveTo(obs.x, obs.y + obs.height);
+        ctx.lineTo(obs.x + 6, obs.y + 10);
+        ctx.lineTo(obs.x + obs.width / 2, obs.y);
+        ctx.lineTo(obs.x + obs.width - 6, obs.y + 12);
+        ctx.lineTo(obs.x + obs.width, obs.y + obs.height);
+        ctx.closePath();
+        ctx.fill();
+      } else {
+        ctx.fillStyle = "#8b5a2b";
+        ctx.fillRect(obs.x, obs.y + 8, obs.width, obs.height - 8);
+        ctx.fillStyle = "#a06b35";
+        ctx.fillRect(obs.x + 4, obs.y + 2, obs.width - 8, 10);
+      }
+    }
+
+    function drawUI() {
+      if (GAME.gameOver) {
+        ctx.fillStyle = "rgba(255,255,255,0.85)";
+        ctx.fillRect(220, 90, 460, 140);
+
+        ctx.fillStyle = "#3d2f2f";
+        ctx.font = "bold 34px Arial";
+        ctx.fillText("Run Ended", 370, 135);
+
+        ctx.font = "20px Arial";
+        ctx.fillText("Seeds brought home: " + GAME.runSeeds, 345, 175);
+        ctx.fillText("Press R to restart or Go Home to plant", 280, 205);
+      }
+    }
+
+    function updateGame() {
+      if (GAME.playing) {
+        GAME.distance += GAME.speed;
+        GAME.speed += 0.0015;
+
+        updateDino(dinoA);
+        updateDino(dinoB);
+
+        GAME.nextObstacleTimer--;
+        GAME.nextSeedTimer--;
+
+        if (GAME.nextObstacleTimer <= 0) {
+          spawnObstacle();
+          GAME.nextObstacleTimer = 70 + Math.floor(Math.random() * 45);
+        }
+
+        if (GAME.nextSeedTimer <= 0) {
+          spawnSeed();
+          GAME.nextSeedTimer = 45 + Math.floor(Math.random() * 35);
+        }
+
+        GAME.obstacles.forEach(obs => {
+          obs.x -= GAME.speed;
+        });
+
+        GAME.seeds.forEach(seed => {
+          seed.x -= GAME.speed;
+        });
+
+        GAME.obstacles = GAME.obstacles.filter(obs => obs.x + obs.width > -20);
+        GAME.seeds = GAME.seeds.filter(seed => seed.x + seed.width > -20 && !seed.collected);
+
+        for (const seed of GAME.seeds) {
+          if (rectsOverlap(dinoA, seed) || rectsOverlap(dinoB, seed)) {
+            seed.collected = true;
+            GAME.runSeeds++;
+            updateStats();
+          }
+        }
+
+        for (const obs of GAME.obstacles) {
+          if (rectsOverlap(dinoA, obs) || rectsOverlap(dinoB, obs)) {
+            endRun();
+            break;
+          }
+        }
+      }
+    }
+
+    function drawGame() {
+      drawBackground();
+
+      GAME.seeds.forEach(drawSeed);
+      GAME.obstacles.forEach(drawObstacle);
+
+      drawDino(dinoA, 0);
+      drawDino(dinoB, 8);
+
+      drawUI();
+    }
+
+    function loop() {
+      updateGame();
+      drawGame();
+      requestAnimationFrame(loop);
+    }
+
+    window.addEventListener("keydown", (e) => {
+      if (e.code === "Space" || e.code === "ArrowUp") {
+        e.preventDefault();
+        jump();
+      }
+      if (e.code === "ArrowDown") {
+        e.preventDefault();
+        setDuck(true);
+      }
+      if (e.code === "KeyR" && GAME.gameOver) {
+        resetRun();
+      }
+    });
+
+    window.addEventListener("keyup", (e) => {
+      if (e.code === "ArrowDown") {
+        setDuck(false);
+      }
+    });
+
+    goHomeBtn.addEventListener("click", () => {
+      if (!GAME.gameOver) {
+        STATE.storedSeeds += GAME.runSeeds;
+        GAME.runSeeds = 0;
+        GAME.playing = false;
+      } else {
+        GAME.runSeeds = 0;
+      }
+      updateStats();
+      showHomeScreen();
+    });
+
+    startRunBtn.addEventListener("click", () => {
+      showRunScreen();
+      resetRun();
+    });
+
+    advanceGrowthBtn.addEventListener("click", () => {
+      advanceFlowerGrowth();
+      renderGarden();
+      updateStats();
+    });
+
+    updateStats();
+    renderGarden();
+    resetRun();
+    loop();
+  </script>
+</body>
+</html>
