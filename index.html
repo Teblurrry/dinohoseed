@@ -782,7 +782,7 @@
         media: [
           {
             type: "image",
-            src: ""photos/4fb6e194-c1b4-453c-9180-adaa15260fc6.JPG"",
+            src: "photos/4fb6e194-c1b4-453c-9180-adaa15260fc6.JPG",
             alt: "Our first memory",
             caption: "Replace this with your first photo caption."
           }
@@ -797,13 +797,13 @@
         media: [
           {
             type: "image",
-            src: "photos/memory-2.jpg",
+            src: "photos/580d0f31-97cc-4ad6-8bc5-d5d40f51cbef.JPG",
             alt: "A favourite moment together",
             caption: "Replace this with your second photo caption."
           },
           {
             type: "image",
-            src: "photos/memory-3.jpg",
+            src: "photos/IMG_0708.jpg",
             alt: "Another favourite moment together",
             caption: "You can keep two photos here or remove either entry."
           }
@@ -818,9 +818,15 @@
         media: [
           {
             type: "image",
-            src: "photos/memory-4.jpg",
+            src: "photos/IMG_0712.jpg",
             alt: "A silly or lovely memory",
             caption: "Replace this with your third memory caption."
+          },
+          {
+            type: "image",
+            src: "photos/IMG_0957.jpg",
+            alt: "Another silly or lovely memory",
+            caption: "Replace this with another memory caption."
           }
         ]
       },
@@ -833,21 +839,27 @@
         media: [
           {
             type: "image",
-            src: "photos/finale-1.jpg",
+            src: "photos/IMG_0961.jpg",
             alt: "Birthday finale memory one",
             caption: "Your finale caption."
           },
           {
             type: "image",
-            src: "photos/finale-2.jpg",
+            src: "photos/IMG_1981.jpg",
             alt: "Birthday finale memory two",
             caption: "Another finale caption."
           },
           {
             type: "image",
-            src: "photos/finale-3.jpg",
+            src: "photos/WhatsApp Image 2025-10-18 at 23.04.53.jpeg",
             alt: "Birthday finale memory three",
-            caption: "Add as many final photos as you want."
+            caption: "Add your third finale caption."
+          },
+          {
+            type: "image",
+            src: "photos/ae6affd4-9bbb-42b7-ad2a-97d24efb3b44.JPG",
+            alt: "Birthday finale memory four",
+            caption: "Add your fourth finale caption."
           }
         ]
       }
@@ -957,24 +969,24 @@
     }
 
     function clearFinishedAdventure() {
-  STATE.birthdayPoints = 0;
-  STATE.flowersCollected = 0;
-  STATE.completed = false;
+      STATE.birthdayPoints = 0;
+      STATE.flowersCollected = 0;
+      STATE.completed = false;
 
-  try {
-    localStorage.removeItem(STORAGE_KEY);
-  } catch (error) {
-    // Continue even if browser storage is unavailable.
-  }
-}
+      try {
+        localStorage.removeItem(STORAGE_KEY);
+      } catch (error) {
+        // Continue even if browser storage is unavailable.
+      }
+    }
 
-function returnToFreshAdventure() {
-  if (STATE.completed) {
-    clearFinishedAdventure();
-  }
+    function returnToFreshAdventure() {
+      if (STATE.completed) {
+        clearFinishedAdventure();
+      }
 
-  showRunScreen();
-}
+      showRunScreen();
+    }
 
     function createDino(x, color) {
       return {
@@ -1656,20 +1668,19 @@ function returnToFreshAdventure() {
       GAME.playing = false;
       GAME.gameOver = false;
       saveState();
-updateStats();
+      updateStats();
 
-/*
-  The current page keeps the completed state so Dino can enjoy
-  the fireworks and memories. Reopening or refreshing starts
-  a fresh adventure from zero.
-*/
-try {
-  localStorage.removeItem(STORAGE_KEY);
-} catch (error) {
-  // Continue even if browser storage is unavailable.
-}
+      /*
+        Keep 28 points in memory while Dino enjoys the finale, but remove the
+        saved copy so reopening or refreshing begins a new adventure at zero.
+      */
+      try {
+        localStorage.removeItem(STORAGE_KEY);
+      } catch (error) {
+        // Continue even if browser storage is unavailable.
+      }
 
-birthdayOverlay.classList.add("show");
+      birthdayOverlay.classList.add("show");
       birthdayOverlay.setAttribute("aria-hidden", "false");
       startFireworks();
       window.setTimeout(() => openGardenBtn.focus(), 650);
