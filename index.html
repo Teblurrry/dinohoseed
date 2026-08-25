@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<!-- DINO FINAL 9-PHOTO BUILD — verified 2026-08-26 03:55 MYT -->
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -324,6 +325,46 @@
       width: 100%;
       height: 100%;
       object-fit: cover;
+    }
+
+    .memory-preview.preview-collage {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      grid-auto-rows: minmax(0, 1fr);
+      place-items: stretch;
+      gap: 3px;
+    }
+
+    .memory-preview.preview-collage.one-photo {
+      grid-template-columns: 1fr;
+    }
+
+    .preview-tile {
+      min-width: 0;
+      min-height: 0;
+      overflow: hidden;
+      background: #f1e8df;
+    }
+
+    .preview-tile > * {
+      width: 100%;
+      height: 100%;
+    }
+
+    .photo-count-pill {
+      position: absolute;
+      z-index: 4;
+      top: 9px;
+      right: 9px;
+      padding: 5px 9px;
+      border: 1px solid rgba(255, 255, 255, 0.7);
+      border-radius: 999px;
+      color: #5f4a54;
+      background: rgba(255, 255, 255, 0.86);
+      box-shadow: 0 4px 12px rgba(61, 47, 47, 0.12);
+      font-size: 12px;
+      font-weight: 900;
+      pointer-events: none;
+      backdrop-filter: blur(4px);
     }
 
     .preview-flower {
@@ -682,6 +723,7 @@
         <div class="badge">Birthday Points: <span id="birthdayPoints">0</span> / 28</div>
         <div class="badge">Flowers: <span id="flowersCollected">0</span> / 4</div>
         <div class="badge">Memories: <span id="memoriesUnlocked">0</span> / 4</div>
+        <div class="badge">Photos: <span id="photosUnlocked">0</span> / <span id="totalPhotos">9</span></div>
       </div>
 
       <div class="flower-progress">
@@ -722,6 +764,7 @@
       <div class="stats">
         <div class="badge">Birthday Points: <span id="gardenPoints">0</span> / 28</div>
         <div class="badge">Memories Bloomed: <span id="gardenUnlocked">0</span> / 4</div>
+        <div class="badge">Photos Revealed: <span id="gardenPhotosUnlocked">0</span> / <span id="gardenTotalPhotos">9</span></div>
       </div>
 
       <p id="gardenIntro" class="garden-intro">Collect the first flower to reveal the first memory.</p>
@@ -766,12 +809,20 @@
     /* ================================================================
        EDIT YOUR PHOTOS, CAPTIONS, AND MESSAGES IN THIS SECTION ONLY.
 
-       Put the photo files in a folder named "photos" beside index.html.
+       The photos below use the direct GitHub Pages image folder, so they work
+       both on the deployed site and when this HTML file is opened for preview.
        You may add or remove media entries inside each memory.
 
        For video, use:
        { type: "video", src: "videos/our-video.mp4", caption: "A caption" }
        ================================================================ */
+    const PHOTO_BASE_URL = "https://teblurrry.github.io/dinohoseed/photos/";
+    const PHOTO_CACHE_VERSION = "20260826-0328";
+
+    function photoUrl(filename) {
+      return PHOTO_BASE_URL + encodeURIComponent(filename);
+    }
+
     const BIRTHDAY_MEMORIES = [
       {
         points: 7,
@@ -782,7 +833,7 @@
         media: [
           {
             type: "image",
-            src: "photos/4fb6e194-c1b4-453c-9180-adaa15260fc6.JPG",
+            src: photoUrl("4fb6e194-c1b4-453c-9180-adaa15260fc6.JPG"),
             alt: "Our first memory",
             caption: "Replace this with your first photo caption."
           }
@@ -797,13 +848,13 @@
         media: [
           {
             type: "image",
-            src: "photos/580d0f31-97cc-4ad6-8bc5-d5d40f51cbef.JPG",
+            src: photoUrl("580d0f31-97cc-4ad6-8bc5-d5d40f51cbef.JPG"),
             alt: "A favourite moment together",
             caption: "Replace this with your second photo caption."
           },
           {
             type: "image",
-            src: "photos/IMG_0708.jpg",
+            src: photoUrl("IMG_0708.jpg"),
             alt: "Another favourite moment together",
             caption: "You can keep two photos here or remove either entry."
           }
@@ -818,13 +869,13 @@
         media: [
           {
             type: "image",
-            src: "photos/IMG_0712.jpg",
+            src: photoUrl("IMG_0712.jpg"),
             alt: "A silly or lovely memory",
             caption: "Replace this with your third memory caption."
           },
           {
             type: "image",
-            src: "photos/IMG_0957.jpg",
+            src: photoUrl("IMG_0957.jpg"),
             alt: "Another silly or lovely memory",
             caption: "Replace this with another memory caption."
           }
@@ -839,25 +890,25 @@
         media: [
           {
             type: "image",
-            src: "photos/IMG_0961.jpg",
+            src: photoUrl("IMG_0961.jpg"),
             alt: "Birthday finale memory one",
             caption: "Your finale caption."
           },
           {
             type: "image",
-            src: "photos/IMG_1981.jpg",
+            src: photoUrl("IMG_1981.jpg"),
             alt: "Birthday finale memory two",
             caption: "Another finale caption."
           },
           {
             type: "image",
-            src: "photos/WhatsApp Image 2025-10-18 at 23.04.53.jpeg",
+            src: photoUrl("WhatsApp Image 2025-10-18 at 23.04.53.jpeg"),
             alt: "Birthday finale memory three",
             caption: "Add your third finale caption."
           },
           {
             type: "image",
-            src: "photos/ae6affd4-9bbb-42b7-ad2a-97d24efb3b44.JPG",
+            src: photoUrl("ae6affd4-9bbb-42b7-ad2a-97d24efb3b44.JPG"),
             alt: "Birthday finale memory four",
             caption: "Add your fourth finale caption."
           }
@@ -868,6 +919,7 @@
     const POINTS_PER_FLOWER = 7;
     const FLOWERS_TO_FINISH = 4;
     const MAX_POINTS = POINTS_PER_FLOWER * FLOWERS_TO_FINISH;
+    const TOTAL_PHOTOS = BIRTHDAY_MEMORIES.reduce((total, memory) => total + memory.media.length, 0);
     const STORAGE_KEY = "dinoBirthdayGardenProgress_v2";
 
     const runScreen = document.getElementById("runScreen");
@@ -881,8 +933,12 @@
     const birthdayPointsEl = document.getElementById("birthdayPoints");
     const flowersCollectedEl = document.getElementById("flowersCollected");
     const memoriesUnlockedEl = document.getElementById("memoriesUnlocked");
+    const photosUnlockedEl = document.getElementById("photosUnlocked");
+    const totalPhotosEl = document.getElementById("totalPhotos");
     const gardenPointsEl = document.getElementById("gardenPoints");
     const gardenUnlockedEl = document.getElementById("gardenUnlocked");
+    const gardenPhotosUnlockedEl = document.getElementById("gardenPhotosUnlocked");
+    const gardenTotalPhotosEl = document.getElementById("gardenTotalPhotos");
     const progressFillEl = document.getElementById("progressFill");
     const progressNumberEl = document.getElementById("progressNumber");
     const gardenIntroEl = document.getElementById("gardenIntro");
@@ -1033,12 +1089,19 @@
 
     function updateStats() {
       const percentage = Math.round((STATE.birthdayPoints / MAX_POINTS) * 100);
+      const unlockedPhotos = BIRTHDAY_MEMORIES
+        .filter(memory => STATE.birthdayPoints >= memory.points)
+        .reduce((total, memory) => total + memory.media.length, 0);
 
       birthdayPointsEl.textContent = STATE.birthdayPoints;
       flowersCollectedEl.textContent = STATE.flowersCollected;
       memoriesUnlockedEl.textContent = STATE.flowersCollected;
+      photosUnlockedEl.textContent = unlockedPhotos;
+      totalPhotosEl.textContent = TOTAL_PHOTOS;
       gardenPointsEl.textContent = STATE.birthdayPoints;
       gardenUnlockedEl.textContent = STATE.flowersCollected;
+      gardenPhotosUnlockedEl.textContent = unlockedPhotos;
+      gardenTotalPhotosEl.textContent = TOTAL_PHOTOS;
       progressFillEl.style.width = percentage + "%";
       progressNumberEl.textContent = percentage + "%";
 
@@ -1440,10 +1503,17 @@
       const icon = document.createElement("span");
       icon.textContent = "📷";
       const text = document.createElement("strong");
-      text.textContent = `Add ${filename}`;
+      const cleanFilename = decodeURIComponent(filename.split("/").pop().split("?")[0]);
+      text.textContent = `Could not load ${cleanFilename}`;
       content.append(icon, text);
       placeholder.appendChild(content);
       return placeholder;
+    }
+
+    function cacheBustedUrl(source, retry = false) {
+      const separator = source.includes("?") ? "&" : "?";
+      const retryToken = retry ? `-${Date.now()}` : "";
+      return `${source}${separator}v=${PHOTO_CACHE_VERSION}${retryToken}`;
     }
 
     function createMedia(mediaItem, compact = false) {
@@ -1452,22 +1522,36 @@
         video.controls = !compact;
         video.preload = "metadata";
         video.playsInline = true;
-        video.src = mediaItem.src;
         if (mediaItem.poster) video.poster = mediaItem.poster;
         if (compact) video.muted = true;
+        let retried = false;
         video.addEventListener("error", () => {
+          if (!retried) {
+            retried = true;
+            video.src = cacheBustedUrl(mediaItem.src, true);
+            video.load();
+            return;
+          }
           video.replaceWith(createPlaceholder(mediaItem.src, compact));
-        }, { once: true });
+        });
+        video.src = cacheBustedUrl(mediaItem.src);
         return video;
       }
 
       const image = document.createElement("img");
-      image.src = mediaItem.src;
       image.alt = mediaItem.alt || "Birthday memory";
-      image.loading = compact ? "lazy" : "eager";
+      image.loading = "eager";
+      image.decoding = "async";
+      let retried = false;
       image.addEventListener("error", () => {
+        if (!retried) {
+          retried = true;
+          image.src = cacheBustedUrl(mediaItem.src, true);
+          return;
+        }
         image.replaceWith(createPlaceholder(mediaItem.src, compact));
-      }, { once: true });
+      });
+      image.src = cacheBustedUrl(mediaItem.src);
       return image;
     }
 
@@ -1486,7 +1570,20 @@
         preview.className = "memory-preview";
 
         if (unlocked && memory.media.length > 0) {
-          preview.appendChild(createMedia(memory.media[0], true));
+          preview.classList.add("preview-collage");
+          if (memory.media.length === 1) preview.classList.add("one-photo");
+
+          memory.media.forEach(mediaItem => {
+            const tile = document.createElement("div");
+            tile.className = "preview-tile";
+            tile.appendChild(createMedia(mediaItem, true));
+            preview.appendChild(tile);
+          });
+
+          const countPill = document.createElement("span");
+          countPill.className = "photo-count-pill";
+          countPill.textContent = `${memory.media.length} ${memory.media.length === 1 ? "photo" : "photos"}`;
+          preview.appendChild(countPill);
         } else {
           const flower = document.createElement("span");
           flower.className = "preview-flower";
