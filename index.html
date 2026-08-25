@@ -956,6 +956,26 @@
       }
     }
 
+    function clearFinishedAdventure() {
+  STATE.birthdayPoints = 0;
+  STATE.flowersCollected = 0;
+  STATE.completed = false;
+
+  try {
+    localStorage.removeItem(STORAGE_KEY);
+  } catch (error) {
+    // Continue even if browser storage is unavailable.
+  }
+}
+
+function returnToFreshAdventure() {
+  if (STATE.completed) {
+    clearFinishedAdventure();
+  }
+
+  showRunScreen();
+}
+
     function createDino(x, color) {
       return {
         x,
@@ -1636,9 +1656,20 @@
       GAME.playing = false;
       GAME.gameOver = false;
       saveState();
-      updateStats();
+updateStats();
 
-      birthdayOverlay.classList.add("show");
+/*
+  The current page keeps the completed state so Dino can enjoy
+  the fireworks and memories. Reopening or refreshing starts
+  a fresh adventure from zero.
+*/
+try {
+  localStorage.removeItem(STORAGE_KEY);
+} catch (error) {
+  // Continue even if browser storage is unavailable.
+}
+
+birthdayOverlay.classList.add("show");
       birthdayOverlay.setAttribute("aria-hidden", "false");
       startFireworks();
       window.setTimeout(() => openGardenBtn.focus(), 650);
@@ -1712,7 +1743,7 @@
 
     restartBtn.addEventListener("click", resetRun);
     goGardenBtn.addEventListener("click", showGardenScreen);
-    backToRunBtn.addEventListener("click", showRunScreen);
+    backToRunBtn.addEventListener("click", returnToFreshAdventure);
     resetProgressBtn.addEventListener("click", resetAdventure);
     showCelebrationBtn.addEventListener("click", triggerBirthdayCelebration);
     gardenCelebrateBtn.addEventListener("click", triggerBirthdayCelebration);
