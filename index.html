@@ -3,292 +3,904 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Dino Flower Home - Version 1</title>
+  <meta name="theme-color" content="#fff7ed" />
+  <title>Dino Birthday Garden</title>
+
+  <!--
+    PHOTO SETUP
+    -----------
+    1. Create a folder named "photos" beside this index.html file.
+    2. Add your pictures using the filenames shown in BIRTHDAY_MEMORIES below.
+    3. Edit the titles, messages, captions, and filenames in that one section.
+
+    You can also use a video inside any memory:
+      { type: "video", src: "videos/our-video.mp4", caption: "Your caption" }
+
+    The page still works before the files are added: it displays friendly placeholders.
+  -->
+
   <style>
+    :root {
+      --ink: #46353b;
+      --muted: #7b6870;
+      --cream: #fffaf4;
+      --page: #f7efe8;
+      --line: #ddc7ad;
+      --green: #6da858;
+      --green-dark: #4f813f;
+      --purple: #8c7ae6;
+      --purple-dark: #6956bd;
+      --pink: #e9779b;
+      --gold: #e6aa3b;
+      --shadow: 0 16px 46px rgba(82, 55, 53, 0.13);
+    }
+
     * {
       box-sizing: border-box;
     }
 
+    html {
+      min-height: 100%;
+    }
+
     body {
       margin: 0;
-      font-family: Arial, sans-serif;
-      background: #f7f1e8;
-      color: #3d2f2f;
-      display: flex;
-      justify-content: center;
-      align-items: flex-start;
       min-height: 100vh;
-      padding: 20px;
+      padding: 22px;
+      overflow-x: hidden;
+      color: var(--ink);
+      font-family: "Trebuchet MS", Arial, sans-serif;
+      background:
+        radial-gradient(circle at 12% 8%, rgba(255, 188, 207, 0.33), transparent 26rem),
+        radial-gradient(circle at 88% 15%, rgba(185, 222, 255, 0.42), transparent 25rem),
+        var(--page);
+    }
+
+    button {
+      font: inherit;
     }
 
     .app {
-      width: 960px;
-      max-width: 100%;
+      width: min(100%, 980px);
+      margin: 0 auto;
     }
 
     .panel {
-      background: #fffaf4;
-      border: 2px solid #d8c3a5;
-      border-radius: 16px;
-      padding: 16px;
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
-    }
-
-    h1, h2, p {
-      margin-top: 0;
+      padding: 20px;
+      overflow: hidden;
+      border: 2px solid var(--line);
+      border-radius: 22px;
+      background: rgba(255, 250, 244, 0.96);
+      box-shadow: var(--shadow);
     }
 
     .hidden {
-      display: none;
+      display: none !important;
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin-top: 0;
+    }
+
+    h1,
+    h2 {
+      margin-bottom: 7px;
+      letter-spacing: -0.035em;
+    }
+
+    p {
+      line-height: 1.55;
+    }
+
+    .eyebrow {
+      margin-bottom: 5px;
+      color: var(--pink);
+      font-size: 12px;
+      font-weight: 900;
+      letter-spacing: 0.13em;
+      text-transform: uppercase;
     }
 
     .topbar {
       display: flex;
+      align-items: flex-start;
       justify-content: space-between;
+      gap: 18px;
+      margin-bottom: 15px;
+    }
+
+    .topbar p {
+      max-width: 610px;
+      margin-bottom: 0;
+      color: var(--muted);
+    }
+
+    .button-row,
+    .footer-row,
+    .touch-controls {
+      display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 10px;
       flex-wrap: wrap;
-      margin-bottom: 12px;
+    }
+
+    .btn {
+      min-height: 42px;
+      padding: 10px 17px;
+      border: 0;
+      border-radius: 13px;
+      color: #fff;
+      font-weight: 900;
+      background: var(--green);
+      box-shadow: 0 6px 14px rgba(75, 124, 61, 0.2);
+      cursor: pointer;
+      transition: transform 0.14s ease, box-shadow 0.14s ease, opacity 0.2s ease;
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 17px rgba(75, 124, 61, 0.25);
+    }
+
+    .btn:active {
+      transform: translateY(0);
+    }
+
+    .btn:focus-visible,
+    .memory-card:focus-visible,
+    .icon-btn:focus-visible {
+      outline: 4px solid rgba(140, 122, 230, 0.25);
+      outline-offset: 3px;
+    }
+
+    .btn.secondary {
+      background: var(--purple);
+      box-shadow: 0 6px 14px rgba(105, 86, 189, 0.2);
+    }
+
+    .btn.ghost {
+      border: 1px solid var(--line);
+      color: var(--ink);
+      background: #f2e5d5;
+      box-shadow: none;
+    }
+
+    .btn.danger-ghost {
+      border: 1px solid #e7b4b4;
+      color: #874747;
+      background: #fff0f0;
+      box-shadow: none;
     }
 
     .stats {
       display: flex;
-      gap: 10px;
+      gap: 9px;
       flex-wrap: wrap;
+      margin-bottom: 12px;
     }
 
     .badge {
-      background: #f3e5d0;
-      border: 1px solid #d8c3a5;
       padding: 8px 12px;
+      border: 1px solid var(--line);
       border-radius: 999px;
-      font-weight: bold;
+      background: #f4e6d4;
+      font-size: 14px;
+      font-weight: 900;
     }
 
-    .btn {
-      border: none;
-      border-radius: 12px;
-      padding: 10px 16px;
-      background: #7bb661;
-      color: white;
-      font-weight: bold;
-      cursor: pointer;
-      transition: transform 0.1s ease, opacity 0.2s ease;
+    .flower-progress {
+      display: grid;
+      grid-template-columns: auto minmax(130px, 1fr) auto;
+      align-items: center;
+      gap: 11px;
+      margin: 12px 0 15px;
     }
 
-    .btn:hover {
-      transform: translateY(-1px);
+    .progress-label,
+    .progress-number {
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 900;
     }
 
-    .btn.secondary {
-      background: #8c7ae6;
+    .progress-track {
+      height: 12px;
+      overflow: hidden;
+      border: 1px solid #d8c5b2;
+      border-radius: 999px;
+      background: #eadfD3;
     }
 
-    .btn.ghost {
-      background: #d8c3a5;
-      color: #3d2f2f;
+    .progress-fill {
+      width: 0;
+      height: 100%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, #f49ab5, #f6c453, #8c7ae6);
+      transition: width 0.45s cubic-bezier(0.2, 0.8, 0.2, 1);
     }
 
-    canvas {
-      width: 100%;
-      background: linear-gradient(to bottom, #dff5ff 0%, #e9fbff 60%, #f6ead7 60%, #f6ead7 100%);
-      border: 2px solid #d8c3a5;
-      border-radius: 16px;
+    .canvas-wrap {
+      position: relative;
+    }
+
+    canvas#gameCanvas {
       display: block;
+      width: 100%;
+      max-width: 100%;
+      border: 2px solid var(--line);
+      border-radius: 18px;
+      background: #dff5ff;
+      touch-action: manipulation;
+      cursor: pointer;
+    }
+
+    .tip-bubble {
+      position: absolute;
+      right: 13px;
+      top: 12px;
+      padding: 7px 10px;
+      border-radius: 999px;
+      color: #604d54;
+      background: rgba(255, 255, 255, 0.8);
+      font-size: 12px;
+      font-weight: 900;
+      pointer-events: none;
+      backdrop-filter: blur(4px);
+    }
+
+    .touch-controls {
+      justify-content: center;
+      margin-top: 12px;
+    }
+
+    .touch-controls .btn {
+      min-width: 118px;
+      user-select: none;
+      touch-action: manipulation;
     }
 
     .help {
-      margin-top: 10px;
-      font-size: 14px;
-      color: #6b5a4a;
+      margin: 10px 0 0;
+      color: var(--muted);
+      font-size: 13px;
+      text-align: center;
     }
 
-    .garden {
+    .garden-intro {
+      padding: 12px 14px;
+      border: 1px solid #ead8c5;
+      border-radius: 14px;
+      color: var(--muted);
+      background: #fff5e9;
+    }
+
+    .memory-garden {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-      gap: 14px;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 15px;
       margin-top: 16px;
     }
 
-    .plot {
-      height: 150px;
-      border: 2px dashed #c8a97e;
-      border-radius: 16px;
-      background: linear-gradient(to top, #8b5a2b 0 28%, #dff3d8 28% 100%);
+    .memory-card {
       position: relative;
-      cursor: pointer;
+      min-height: 270px;
+      padding: 0;
       overflow: hidden;
-      transition: transform 0.15s ease, box-shadow 0.15s ease;
+      border: 2px solid #ead4bd;
+      border-radius: 18px;
+      color: var(--ink);
+      background: #fff;
+      text-align: left;
+      cursor: pointer;
+      transition: transform 0.18s ease, box-shadow 0.18s ease;
     }
 
-    .plot:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 18px rgba(0, 0, 0, 0.08);
+    .memory-card:not(.locked):hover {
+      transform: translateY(-3px);
+      box-shadow: 0 13px 26px rgba(71, 52, 58, 0.13);
     }
 
-    .plot.locked {
+    .memory-card.locked {
       cursor: not-allowed;
-      opacity: 0.5;
-      filter: grayscale(0.3);
+      background: #eee7df;
     }
 
-    .plot-label {
+    .memory-preview {
+      position: relative;
+      display: grid;
+      place-items: center;
+      height: 170px;
+      overflow: hidden;
+      background:
+        radial-gradient(circle at 35% 25%, rgba(255, 255, 255, 0.8), transparent 24%),
+        linear-gradient(135deg, #f8ccda, #fbe8b8 50%, #d8d0ff);
+    }
+
+    .memory-preview img,
+    .memory-preview video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .preview-flower {
+      font-size: 64px;
+      filter: drop-shadow(0 8px 9px rgba(69, 45, 55, 0.16));
+    }
+
+    .lock-layer {
       position: absolute;
-      top: 10px;
-      left: 10px;
-      font-size: 13px;
-      font-weight: bold;
-      background: rgba(255,255,255,0.8);
-      padding: 4px 8px;
-      border-radius: 999px;
-    }
-
-    .flower {
-      position: absolute;
-      left: 50%;
-      bottom: 28%;
-      transform: translateX(-50%);
-      display: flex;
-      align-items: center;
-      flex-direction: column;
-      pointer-events: none;
-    }
-
-    .stem {
-      width: 6px;
-      background: #3f9b4b;
-      border-radius: 8px;
-    }
-
-    .bloom {
-      border-radius: 50%;
-      margin-bottom: -4px;
-      border: 2px solid rgba(255,255,255,0.7);
-    }
-
-    .leaves {
-      position: absolute;
-      top: 35%;
-      width: 38px;
-      height: 18px;
-    }
-
-    .leaf {
-      position: absolute;
-      width: 16px;
-      height: 10px;
-      background: #4caf50;
-      border-radius: 50% 50% 50% 50%;
-      top: 4px;
-    }
-
-    .leaf.left {
-      left: 0;
-      transform: rotate(-30deg);
-    }
-
-    .leaf.right {
-      right: 0;
-      transform: rotate(30deg);
-    }
-
-    .empty-note,
-    .locked-note {
-      position: absolute;
-      bottom: 12px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 90%;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      padding: 20px;
+      color: #604f55;
+      background: rgba(242, 235, 228, 0.84);
       text-align: center;
-      font-size: 13px;
-      background: rgba(255,255,255,0.75);
-      padding: 6px 8px;
-      border-radius: 10px;
+      backdrop-filter: blur(5px);
+    }
+
+    .lock-layer strong {
+      display: block;
+      margin-top: 6px;
+      font-size: 14px;
+    }
+
+    .memory-card-copy {
+      padding: 14px 15px 16px;
+    }
+
+    .memory-card-copy small {
+      color: var(--pink);
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .memory-card-copy h3 {
+      margin: 7px 0 0;
+      font-size: 19px;
     }
 
     .footer-row {
+      justify-content: space-between;
       margin-top: 18px;
+    }
+
+    .overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 30;
+      display: grid;
+      place-items: center;
+      padding: 20px;
+      opacity: 0;
+      visibility: hidden;
+      background: rgba(37, 25, 35, 0.65);
+      backdrop-filter: blur(8px);
+      transition: opacity 0.22s ease, visibility 0.22s ease;
+    }
+
+    .overlay.show {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .memory-modal-card {
+      position: relative;
+      width: min(100%, 720px);
+      max-height: min(88vh, 760px);
+      padding: 22px;
+      overflow: auto;
+      border: 2px solid #f3ddc7;
+      border-radius: 23px;
+      background: var(--cream);
+      box-shadow: 0 24px 80px rgba(21, 11, 21, 0.3);
+      transform: translateY(18px) scale(0.98);
+      transition: transform 0.25s ease;
+    }
+
+    .overlay.show .memory-modal-card {
+      transform: translateY(0) scale(1);
+    }
+
+    .icon-btn {
+      position: absolute;
+      z-index: 2;
+      right: 13px;
+      top: 13px;
+      display: grid;
+      width: 38px;
+      height: 38px;
+      place-items: center;
+      border: 1px solid #dfc9b4;
+      border-radius: 50%;
+      color: var(--ink);
+      background: rgba(255, 250, 244, 0.92);
+      font-size: 22px;
+      cursor: pointer;
+    }
+
+    .modal-heading {
+      padding-right: 40px;
+    }
+
+    .modal-heading h2 {
+      font-size: clamp(26px, 5vw, 39px);
+    }
+
+    .modal-heading p {
+      margin-bottom: 16px;
+      color: var(--muted);
+    }
+
+    .media-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .media-grid.single {
+      grid-template-columns: 1fr;
+    }
+
+    .media-frame {
+      position: relative;
+      min-height: 220px;
+      overflow: hidden;
+      border: 1px solid #ead4bd;
+      border-radius: 16px;
+      background: #f1e8df;
+    }
+
+    .media-frame img,
+    .media-frame video {
+      display: block;
+      width: 100%;
+      height: 100%;
+      max-height: 440px;
+      object-fit: contain;
+      background: #f1e8df;
+    }
+
+    .media-caption {
+      padding: 9px 11px;
+      color: var(--muted);
+      background: #fff;
+      font-size: 13px;
+    }
+
+    .media-placeholder {
+      display: grid;
+      min-height: 220px;
+      place-items: center;
+      padding: 24px;
+      color: #765e69;
+      background:
+        radial-gradient(circle at 30% 25%, rgba(255, 255, 255, 0.85), transparent 25%),
+        linear-gradient(135deg, #f6c9d7, #f8e7b9 52%, #d7d0fa);
+      text-align: center;
+    }
+
+    .media-placeholder span {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 43px;
+    }
+
+    .memory-message {
+      margin: 15px 0 0;
+      padding: 14px 16px;
+      border-left: 5px solid var(--pink);
+      border-radius: 0 13px 13px 0;
+      color: #634e56;
+      background: #fff0f5;
+    }
+
+    .modal-actions {
       display: flex;
+      justify-content: flex-end;
+      margin-top: 17px;
+    }
+
+    .birthday-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 50;
+      display: grid;
+      place-items: center;
+      padding: 20px;
+      overflow: hidden;
+      opacity: 0;
+      visibility: hidden;
+      color: #fff;
+      background:
+        radial-gradient(circle at 50% 80%, rgba(142, 92, 194, 0.45), transparent 36%),
+        linear-gradient(180deg, #100d2b, #241445 58%, #43275a);
+      transition: opacity 0.55s ease, visibility 0.55s ease;
+    }
+
+    .birthday-overlay.show {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    #fireworksCanvas {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+    }
+
+    .celebration-card {
+      position: relative;
+      z-index: 2;
+      width: min(100%, 680px);
+      padding: clamp(25px, 5vw, 48px);
+      border: 1px solid rgba(255, 255, 255, 0.27);
+      border-radius: 28px;
+      background: rgba(20, 13, 47, 0.68);
+      box-shadow: 0 28px 100px rgba(0, 0, 0, 0.42);
+      text-align: center;
+      backdrop-filter: blur(11px);
+      transform: scale(0.86);
+      transition: transform 0.65s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .birthday-overlay.show .celebration-card {
+      transform: scale(1);
+    }
+
+    .celebration-card h2 {
+      margin: 8px 0 9px;
+      color: #fff6d7;
+      font-size: clamp(38px, 8vw, 72px);
+      line-height: 1;
+      text-shadow: 0 0 28px rgba(255, 206, 112, 0.5);
+    }
+
+    .celebration-card p {
+      margin-bottom: 21px;
+      color: #f8eafa;
+      font-size: clamp(16px, 2.4vw, 20px);
+    }
+
+    .celebration-dinos {
+      font-size: clamp(44px, 8vw, 68px);
+      animation: birthdayBounce 0.72s ease-in-out infinite alternate;
+    }
+
+    .celebration-flower-line {
+      margin-bottom: 5px;
+      font-size: 26px;
+      letter-spacing: 0.16em;
+    }
+
+    .celebration-actions {
+      display: flex;
+      justify-content: center;
       gap: 10px;
       flex-wrap: wrap;
     }
 
-    .tiny {
-      font-size: 13px;
-      color: #6b5a4a;
+    .celebration-actions .btn {
+      background: linear-gradient(135deg, #f09ab4, #c967a3);
+      box-shadow: 0 9px 25px rgba(228, 109, 155, 0.3);
+    }
+
+    .celebration-actions .btn.secondary {
+      background: rgba(255, 255, 255, 0.16);
+      box-shadow: none;
+      border: 1px solid rgba(255, 255, 255, 0.28);
+    }
+
+    @keyframes birthdayBounce {
+      from { transform: translateY(3px) rotate(-1deg); }
+      to { transform: translateY(-8px) rotate(1deg); }
+    }
+
+    @media (max-width: 700px) {
+      body {
+        padding: 10px;
+      }
+
+      .panel {
+        padding: 14px;
+        border-radius: 17px;
+      }
+
+      .topbar {
+        flex-direction: column;
+      }
+
+      .memory-garden,
+      .media-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .memory-card {
+        min-height: 245px;
+      }
+
+      .flower-progress {
+        grid-template-columns: 1fr auto;
+      }
+
+      .progress-label {
+        grid-column: 1 / -1;
+      }
+
+      .tip-bubble {
+        display: none;
+      }
+
+      .footer-row {
+        align-items: stretch;
+        flex-direction: column;
+      }
+
+      .footer-row .button-row,
+      .footer-row .btn {
+        width: 100%;
+      }
+
+      .footer-row .btn {
+        flex: 1;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        scroll-behavior: auto !important;
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
     }
   </style>
 </head>
+
 <body>
-  <div class="app">
-    <div id="runScreen" class="panel">
+  <main class="app">
+    <section id="runScreen" class="panel">
       <div class="topbar">
         <div>
-          <h1>Dino Flower Home</h1>
-          <p>Run together, collect seeds, then bring them home to plant.</p>
+          <div class="eyebrow">A birthday adventure for Dino</div>
+          <h1>Dino Birthday Garden</h1>
+          <p>Help the two dinosaurs collect four flowers. Every flower is worth seven birthday points and unlocks a memory.</p>
         </div>
-        <button id="goHomeBtn" class="btn secondary">Go Home</button>
+        <button id="goGardenBtn" class="btn secondary" type="button">Memory Garden</button>
+      </div>
+
+      <div class="stats" aria-label="Birthday progress">
+        <div class="badge">Birthday Points: <span id="birthdayPoints">0</span> / 28</div>
+        <div class="badge">Flowers: <span id="flowersCollected">0</span> / 4</div>
+        <div class="badge">Memories: <span id="memoriesUnlocked">0</span> / 4</div>
+      </div>
+
+      <div class="flower-progress">
+        <span class="progress-label">Birthday surprise progress</span>
+        <div class="progress-track" aria-hidden="true">
+          <div id="progressFill" class="progress-fill"></div>
+        </div>
+        <span id="progressNumber" class="progress-number">0%</span>
+      </div>
+
+      <div class="canvas-wrap">
+        <canvas id="gameCanvas" width="900" height="360" aria-label="Two dinosaurs collecting birthday flowers"></canvas>
+        <div class="tip-bubble">Each flower = 7 points 🌸</div>
+      </div>
+
+      <div class="touch-controls">
+        <button id="jumpBtn" class="btn" type="button">↑ Jump</button>
+        <button id="duckBtn" class="btn secondary" type="button">↓ Duck</button>
+        <button id="restartBtn" class="btn ghost hidden" type="button">Restart Run</button>
+        <button id="showCelebrationBtn" class="btn secondary hidden" type="button">Watch Fireworks</button>
+      </div>
+
+      <p class="help">
+        Keyboard: <strong>Space</strong> / <strong>↑</strong> to jump, <strong>↓</strong> to duck, <strong>R</strong> to restart. On a phone, tap the game or use the buttons.
+      </p>
+    </section>
+
+    <section id="gardenScreen" class="panel hidden">
+      <div class="topbar">
+        <div>
+          <div class="eyebrow">Four flowers, four little chapters</div>
+          <h2>Our Memory Garden</h2>
+          <p>Every birthday flower makes another memory bloom.</p>
+        </div>
+        <button id="backToRunBtn" class="btn" type="button">Back to Adventure</button>
       </div>
 
       <div class="stats">
-        <div class="badge">Seeds This Run: <span id="runSeeds">0</span></div>
-        <div class="badge">Stored Seeds: <span id="storedSeeds">0</span></div>
-        <div class="badge">Flowers Bloomed: <span id="flowersBloomed">0</span></div>
+        <div class="badge">Birthday Points: <span id="gardenPoints">0</span> / 28</div>
+        <div class="badge">Memories Bloomed: <span id="gardenUnlocked">0</span> / 4</div>
       </div>
 
-      <div style="margin-top: 14px;">
-        <canvas id="gameCanvas" width="900" height="360"></canvas>
-      </div>
-
-      <div class="help">
-        Controls: <b>Space</b> / <b>↑</b> jump, <b>↓</b> duck, <b>R</b> restart after game over
-      </div>
-    </div>
-
-    <div id="homeScreen" class="panel hidden">
-      <div class="topbar">
-        <div>
-          <h2>Home Garden</h2>
-          <p>Click an empty plot to plant one seed. Flowers grow when you finish more runs.</p>
-        </div>
-        <button id="startRunBtn" class="btn">Start New Run</button>
-      </div>
-
-      <div class="stats">
-        <div class="badge">Stored Seeds: <span id="homeStoredSeeds">0</span></div>
-        <div class="badge">Unlocked Plots: <span id="unlockedPlots">0</span></div>
-        <div class="badge">Flowers Bloomed: <span id="homeFlowersBloomed">0</span></div>
-      </div>
-
-      <div id="garden" class="garden"></div>
+      <p id="gardenIntro" class="garden-intro">Collect the first flower to reveal the first memory.</p>
+      <div id="memoryGarden" class="memory-garden"></div>
 
       <div class="footer-row">
-        <button id="advanceGrowthBtn" class="btn ghost">Grow Flowers Once</button>
+        <div class="button-row">
+          <button id="gardenCelebrateBtn" class="btn secondary hidden" type="button">Watch Birthday Fireworks</button>
+        </div>
+        <button id="resetProgressBtn" class="btn danger-ghost" type="button">Reset Adventure</button>
       </div>
-      <p class="tiny">
-        Unlock rule: the more flowers you plant/bloom, the more plots open up.
-      </p>
-    </div>
+    </section>
+  </main>
+
+  <div id="memoryModal" class="overlay" role="dialog" aria-modal="true" aria-labelledby="memoryTitle" aria-hidden="true">
+    <article class="memory-modal-card">
+      <button id="closeMemoryBtn" class="icon-btn" type="button" aria-label="Close memory">×</button>
+      <div id="memoryModalContent"></div>
+      <div class="modal-actions">
+        <button id="memoryContinueBtn" class="btn" type="button">Continue Adventure</button>
+      </div>
+    </article>
+  </div>
+
+  <div id="birthdayOverlay" class="birthday-overlay" role="dialog" aria-modal="true" aria-labelledby="birthdayTitle" aria-hidden="true">
+    <canvas id="fireworksCanvas" aria-hidden="true"></canvas>
+    <section class="celebration-card">
+      <div class="celebration-flower-line">🌼 🌷 🌸 🌹</div>
+      <div class="celebration-dinos" aria-hidden="true">🦖 💗 🦖</div>
+      <h2 id="birthdayTitle">Happy Birthday, Dino!</h2>
+      <p>Four flowers, twenty-eight points, and a whole garden of memories made for you.</p>
+      <div class="celebration-actions">
+        <button id="openGardenBtn" class="btn" type="button">Open Our Memory Garden</button>
+        <button id="replayFireworksBtn" class="btn secondary" type="button">More Fireworks</button>
+      </div>
+    </section>
   </div>
 
   <script>
+    "use strict";
+
+    /* ================================================================
+       EDIT YOUR PHOTOS, CAPTIONS, AND MESSAGES IN THIS SECTION ONLY.
+
+       Put the photo files in a folder named "photos" beside index.html.
+       You may add or remove media entries inside each memory.
+
+       For video, use:
+       { type: "video", src: "videos/our-video.mp4", caption: "A caption" }
+       ================================================================ */
+    const BIRTHDAY_MEMORIES = [
+      {
+        points: 7,
+        flower: "🌼",
+        title: "Our First Birthday Flower",
+        subtitle: "Seven points — the first memory has bloomed.",
+        message: "Replace this with the story or message you want Dino to read after finding the first flower.",
+        media: [
+          {
+            type: "image",
+            src: "photos/memory-1.jpg",
+            alt: "Our first memory",
+            caption: "Replace this with your first photo caption."
+          }
+        ]
+      },
+      {
+        points: 14,
+        flower: "🌷",
+        title: "A Moment I Keep Replaying",
+        subtitle: "Fourteen points — another little part of us.",
+        message: "Write something sweet, silly, or very specifically yours here.",
+        media: [
+          {
+            type: "image",
+            src: "photos/memory-2.jpg",
+            alt: "A favourite moment together",
+            caption: "Replace this with your second photo caption."
+          },
+          {
+            type: "image",
+            src: "photos/memory-3.jpg",
+            alt: "Another favourite moment together",
+            caption: "You can keep two photos here or remove either entry."
+          }
+        ]
+      },
+      {
+        points: 21,
+        flower: "🌸",
+        title: "Us Being Us",
+        subtitle: "Twenty-one points — three flowers found.",
+        message: "This is a good place for a funny memory, an inside joke, or a small love note before the finale.",
+        media: [
+          {
+            type: "image",
+            src: "photos/memory-4.jpg",
+            alt: "A silly or lovely memory",
+            caption: "Replace this with your third memory caption."
+          }
+        ]
+      },
+      {
+        points: 28,
+        flower: "🌹",
+        title: "Happy Birthday, Dino!",
+        subtitle: "Twenty-eight points — the whole birthday garden is yours.",
+        message: "Happy birthday to my favourite Dino. Replace this with your final birthday letter or message. ❤️",
+        media: [
+          {
+            type: "image",
+            src: "photos/finale-1.jpg",
+            alt: "Birthday finale memory one",
+            caption: "Your finale caption."
+          },
+          {
+            type: "image",
+            src: "photos/finale-2.jpg",
+            alt: "Birthday finale memory two",
+            caption: "Another finale caption."
+          },
+          {
+            type: "image",
+            src: "photos/finale-3.jpg",
+            alt: "Birthday finale memory three",
+            caption: "Add as many final photos as you want."
+          }
+        ]
+      }
+    ];
+
+    const POINTS_PER_FLOWER = 7;
+    const FLOWERS_TO_FINISH = 4;
+    const MAX_POINTS = POINTS_PER_FLOWER * FLOWERS_TO_FINISH;
+    const STORAGE_KEY = "dinoBirthdayGardenProgress_v2";
+
     const runScreen = document.getElementById("runScreen");
-    const homeScreen = document.getElementById("homeScreen");
-    const goHomeBtn = document.getElementById("goHomeBtn");
-    const startRunBtn = document.getElementById("startRunBtn");
-    const advanceGrowthBtn = document.getElementById("advanceGrowthBtn");
+    const gardenScreen = document.getElementById("gardenScreen");
+    const goGardenBtn = document.getElementById("goGardenBtn");
+    const backToRunBtn = document.getElementById("backToRunBtn");
+    const resetProgressBtn = document.getElementById("resetProgressBtn");
+    const gardenCelebrateBtn = document.getElementById("gardenCelebrateBtn");
+    const showCelebrationBtn = document.getElementById("showCelebrationBtn");
 
-    const runSeedsEl = document.getElementById("runSeeds");
-    const storedSeedsEl = document.getElementById("storedSeeds");
-    const flowersBloomedEl = document.getElementById("flowersBloomed");
+    const birthdayPointsEl = document.getElementById("birthdayPoints");
+    const flowersCollectedEl = document.getElementById("flowersCollected");
+    const memoriesUnlockedEl = document.getElementById("memoriesUnlocked");
+    const gardenPointsEl = document.getElementById("gardenPoints");
+    const gardenUnlockedEl = document.getElementById("gardenUnlocked");
+    const progressFillEl = document.getElementById("progressFill");
+    const progressNumberEl = document.getElementById("progressNumber");
+    const gardenIntroEl = document.getElementById("gardenIntro");
+    const memoryGardenEl = document.getElementById("memoryGarden");
 
-    const homeStoredSeedsEl = document.getElementById("homeStoredSeeds");
-    const unlockedPlotsEl = document.getElementById("unlockedPlots");
-    const homeFlowersBloomedEl = document.getElementById("homeFlowersBloomed");
-    const gardenEl = document.getElementById("garden");
+    const jumpBtn = document.getElementById("jumpBtn");
+    const duckBtn = document.getElementById("duckBtn");
+    const restartBtn = document.getElementById("restartBtn");
+
+    const memoryModal = document.getElementById("memoryModal");
+    const memoryModalContent = document.getElementById("memoryModalContent");
+    const closeMemoryBtn = document.getElementById("closeMemoryBtn");
+    const memoryContinueBtn = document.getElementById("memoryContinueBtn");
+
+    const birthdayOverlay = document.getElementById("birthdayOverlay");
+    const openGardenBtn = document.getElementById("openGardenBtn");
+    const replayFireworksBtn = document.getElementById("replayFireworksBtn");
+    const fireworksCanvas = document.getElementById("fireworksCanvas");
+    const fireworksCtx = fireworksCanvas.getContext("2d");
 
     const canvas = document.getElementById("gameCanvas");
     const ctx = canvas.getContext("2d");
+
+    const DEFAULT_STATE = {
+      birthdayPoints: 0,
+      flowersCollected: 0,
+      completed: false
+    };
+
+    const STATE = loadState();
 
     const GAME = {
       width: canvas.width,
@@ -301,31 +913,48 @@
       playing: true,
       gameOver: false,
       distance: 0,
-      runSeeds: 0,
+      runFlowers: 0,
       obstacles: [],
-      seeds: [],
-      clouds: [],
-      nextObstacleTimer: 0,
-      nextSeedTimer: 0
+      flowers: [],
+      nextObstacleTimer: 100,
+      nextFlowerTimer: 55,
+      collectionFlash: null
     };
 
-    const STATE = {
-      storedSeeds: 0,
-      totalFlowersBloomed: 0,
-      totalFlowersPlanted: 0,
-      runCount: 0,
-      plots: [
-        null,
-        null,
-        null,
-        null,
-        null,
-        null
-      ]
-    };
-
+    const flowerColors = ["#ffd166", "#f78fb3", "#c77dff", "#ff6b6b"];
     const dinoA = createDino(120, "#5c4b8a");
     const dinoB = createDino(170, "#d97b66");
+
+    let resumeGameAfterMemory = false;
+    let pendingEventTimer = null;
+    let fireworksAnimationId = null;
+    let fireworksLaunchTimer = null;
+    let fireworksParticles = [];
+    let fireworksTimeouts = [];
+
+    function loadState() {
+      try {
+        const saved = JSON.parse(localStorage.getItem(STORAGE_KEY));
+        if (!saved) return { ...DEFAULT_STATE };
+
+        const flowers = Math.max(0, Math.min(FLOWERS_TO_FINISH, Number(saved.flowersCollected) || 0));
+        return {
+          birthdayPoints: flowers * POINTS_PER_FLOWER,
+          flowersCollected: flowers,
+          completed: flowers >= FLOWERS_TO_FINISH
+        };
+      } catch (error) {
+        return { ...DEFAULT_STATE };
+      }
+    }
+
+    function saveState() {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(STATE));
+      } catch (error) {
+        // The game still works if browser storage is unavailable.
+      }
+    }
 
     function createDino(x, color) {
       return {
@@ -340,63 +969,85 @@
       };
     }
 
+    function resetDino(dino) {
+      dino.y = GAME.groundY - 42;
+      dino.width = 36;
+      dino.height = 42;
+      dino.vy = 0;
+      dino.onGround = true;
+    }
+
     function resetRun() {
+      window.clearTimeout(pendingEventTimer);
+      pendingEventTimer = null;
+
       GAME.speed = 5;
-      GAME.gravity = 0.7;
       GAME.ducking = false;
-      GAME.playing = true;
+      GAME.playing = !STATE.completed;
       GAME.gameOver = false;
       GAME.distance = 0;
-      GAME.runSeeds = 0;
+      GAME.runFlowers = 0;
       GAME.obstacles = [];
-      GAME.seeds = [];
-      GAME.nextObstacleTimer = 80;
-      GAME.nextSeedTimer = 50;
+      GAME.flowers = [];
+      GAME.nextObstacleTimer = 105;
+      GAME.nextFlowerTimer = 45;
+      GAME.collectionFlash = null;
 
-      dinoA.y = GAME.groundY - 42;
-      dinoB.y = GAME.groundY - 42;
-      dinoA.width = 36;
-      dinoA.height = 42;
-      dinoB.width = 36;
-      dinoB.height = 42;
-      dinoA.vy = 0;
-      dinoB.vy = 0;
-      dinoA.onGround = true;
-      dinoB.onGround = true;
-
+      resetDino(dinoA);
+      resetDino(dinoB);
       updateStats();
+      updateControlButtons();
     }
 
     function updateStats() {
-      runSeedsEl.textContent = GAME.runSeeds;
-      storedSeedsEl.textContent = STATE.storedSeeds;
-      flowersBloomedEl.textContent = STATE.totalFlowersBloomed;
+      const percentage = Math.round((STATE.birthdayPoints / MAX_POINTS) * 100);
 
-      homeStoredSeedsEl.textContent = STATE.storedSeeds;
-      homeFlowersBloomedEl.textContent = STATE.totalFlowersBloomed;
-      unlockedPlotsEl.textContent = getUnlockedPlotsCount();
+      birthdayPointsEl.textContent = STATE.birthdayPoints;
+      flowersCollectedEl.textContent = STATE.flowersCollected;
+      memoriesUnlockedEl.textContent = STATE.flowersCollected;
+      gardenPointsEl.textContent = STATE.birthdayPoints;
+      gardenUnlockedEl.textContent = STATE.flowersCollected;
+      progressFillEl.style.width = percentage + "%";
+      progressNumberEl.textContent = percentage + "%";
+
+      if (STATE.completed) {
+        gardenIntroEl.textContent = "All four memories are blooming. The birthday garden is complete!";
+      } else if (STATE.flowersCollected > 0) {
+        gardenIntroEl.textContent = `${STATE.flowersCollected} of 4 memories have bloomed. Keep running to find the next flower.`;
+      } else {
+        gardenIntroEl.textContent = "Collect the first flower to reveal the first memory.";
+      }
+
+      renderMemoryGarden();
+      updateControlButtons();
     }
 
-    function getUnlockedPlotsCount() {
-      return Math.min(STATE.plots.length, 2 + Math.floor(STATE.totalFlowersPlanted / 2) + Math.floor(STATE.totalFlowersBloomed / 2));
+    function updateControlButtons() {
+      restartBtn.classList.toggle("hidden", !GAME.gameOver || STATE.completed);
+      showCelebrationBtn.classList.toggle("hidden", !STATE.completed);
+      gardenCelebrateBtn.classList.toggle("hidden", !STATE.completed);
+      jumpBtn.disabled = STATE.completed;
+      duckBtn.disabled = STATE.completed;
+      jumpBtn.style.opacity = STATE.completed ? "0.5" : "1";
+      duckBtn.style.opacity = STATE.completed ? "0.5" : "1";
     }
 
     function showRunScreen() {
+      gardenScreen.classList.add("hidden");
       runScreen.classList.remove("hidden");
-      homeScreen.classList.add("hidden");
-      updateStats();
+      resetRun();
     }
 
-    function showHomeScreen() {
+    function showGardenScreen() {
+      GAME.playing = false;
       runScreen.classList.add("hidden");
-      homeScreen.classList.remove("hidden");
-      advanceFlowerGrowth();
-      renderGarden();
+      gardenScreen.classList.remove("hidden");
+      renderMemoryGarden();
       updateStats();
     }
 
     function jump() {
-      if (!GAME.playing) return;
+      if (!GAME.playing || isBlockingOverlayOpen()) return;
       if (dinoA.onGround && dinoB.onGround) {
         dinoA.vy = GAME.jumpPower;
         dinoB.vy = GAME.jumpPower;
@@ -406,24 +1057,25 @@
     }
 
     function setDuck(isDucking) {
+      if (!GAME.playing || isBlockingOverlayOpen()) return;
+
       GAME.ducking = isDucking;
       if (dinoA.onGround && dinoB.onGround) {
-        if (isDucking) {
-          dinoA.height = 26;
-          dinoB.height = 26;
-          dinoA.width = 44;
-          dinoB.width = 44;
-          dinoA.y = GAME.groundY - dinoA.height;
-          dinoB.y = GAME.groundY - dinoB.height;
-        } else {
-          dinoA.height = 42;
-          dinoB.height = 42;
-          dinoA.width = 36;
-          dinoB.width = 36;
-          dinoA.y = GAME.groundY - dinoA.height;
-          dinoB.y = GAME.groundY - dinoB.height;
-        }
+        [dinoA, dinoB].forEach(dino => {
+          if (isDucking) {
+            dino.height = 26;
+            dino.width = 44;
+          } else {
+            dino.height = 42;
+            dino.width = 36;
+          }
+          dino.y = GAME.groundY - dino.height;
+        });
       }
+    }
+
+    function isBlockingOverlayOpen() {
+      return memoryModal.classList.contains("show") || birthdayOverlay.classList.contains("show");
     }
 
     function spawnObstacle() {
@@ -437,13 +1089,18 @@
       });
     }
 
-    function spawnSeed() {
-      GAME.seeds.push({
-        x: GAME.width + 20,
-        y: GAME.groundY - 75 - Math.random() * 45,
-        width: 18,
-        height: 18,
-        collected: false
+    function spawnFlower() {
+      if (STATE.completed || GAME.flowers.length > 0) return;
+
+      const colorIndex = Math.min(STATE.flowersCollected, flowerColors.length - 1);
+      GAME.flowers.push({
+        x: GAME.width + 25,
+        y: GAME.groundY - 72 - Math.random() * 52,
+        width: 30,
+        height: 38,
+        color: flowerColors[colorIndex],
+        collected: false,
+        bob: Math.random() * Math.PI * 2
       });
     }
 
@@ -472,133 +1129,88 @@
       dino.legPhase += 0.2;
     }
 
+    function collectFlower(flower) {
+      if (flower.collected || STATE.completed) return;
+
+      flower.collected = true;
+      GAME.runFlowers += 1;
+      STATE.flowersCollected = Math.min(FLOWERS_TO_FINISH, STATE.flowersCollected + 1);
+      STATE.birthdayPoints = STATE.flowersCollected * POINTS_PER_FLOWER;
+      STATE.completed = STATE.flowersCollected >= FLOWERS_TO_FINISH;
+      GAME.playing = false;
+      GAME.collectionFlash = {
+        text: `+${POINTS_PER_FLOWER} birthday points!`,
+        frames: 42
+      };
+
+      saveState();
+      updateStats();
+
+      const unlockedIndex = STATE.flowersCollected - 1;
+      if (STATE.completed) {
+        pendingEventTimer = window.setTimeout(triggerBirthdayCelebration, 650);
+      } else {
+        pendingEventTimer = window.setTimeout(() => openMemory(unlockedIndex, true), 520);
+      }
+    }
+
     function endRun() {
       GAME.playing = false;
       GAME.gameOver = true;
-      STATE.storedSeeds += GAME.runSeeds;
-      STATE.runCount += 1;
-      updateStats();
+      setDuck(false);
+      updateControlButtons();
     }
 
-    function advanceFlowerGrowth() {
-      let bloomedNow = 0;
+    function updateGame() {
+      if (!GAME.playing) return;
 
-      STATE.plots = STATE.plots.map(plot => {
-        if (!plot) return null;
-        if (plot.stage < 3) {
-          const next = { ...plot, stage: plot.stage + 1 };
-          if (next.stage === 3 && plot.stage < 3) bloomedNow++;
-          return next;
-        }
-        return plot;
+      GAME.distance += GAME.speed;
+      GAME.speed += 0.0011;
+
+      updateDino(dinoA);
+      updateDino(dinoB);
+
+      GAME.nextObstacleTimer -= 1;
+      GAME.nextFlowerTimer -= 1;
+
+      if (GAME.nextObstacleTimer <= 0) {
+        spawnObstacle();
+        GAME.nextObstacleTimer = 92 + Math.floor(Math.random() * 55);
+      }
+
+      if (GAME.nextFlowerTimer <= 0) {
+        spawnFlower();
+        GAME.nextFlowerTimer = 62 + Math.floor(Math.random() * 42);
+      }
+
+      GAME.obstacles.forEach(obstacle => {
+        obstacle.x -= GAME.speed;
       });
 
-      STATE.totalFlowersBloomed += bloomedNow;
-    }
-
-    function plantSeed(plotIndex) {
-      const unlocked = getUnlockedPlotsCount();
-      if (plotIndex >= unlocked) return;
-      if (STATE.storedSeeds <= 0) return;
-      if (STATE.plots[plotIndex] !== null) return;
-
-      const flowerColors = ["#ff7aa2", "#ffd166", "#c77dff", "#ff9f1c", "#7bd389", "#ff6b6b"];
-      const color = flowerColors[Math.floor(Math.random() * flowerColors.length)];
-
-      STATE.plots[plotIndex] = {
-        stage: 0,
-        color
-      };
-      STATE.storedSeeds -= 1;
-      STATE.totalFlowersPlanted += 1;
-
-      renderGarden();
-      updateStats();
-    }
-
-    function renderGarden() {
-      gardenEl.innerHTML = "";
-      const unlocked = getUnlockedPlotsCount();
-
-      STATE.plots.forEach((plot, index) => {
-        const plotEl = document.createElement("div");
-        plotEl.className = "plot" + (index >= unlocked ? " locked" : "");
-        plotEl.addEventListener("click", () => plantSeed(index));
-
-        const label = document.createElement("div");
-        label.className = "plot-label";
-        label.textContent = "Plot " + (index + 1);
-        plotEl.appendChild(label);
-
-        if (index >= unlocked) {
-          const lockedNote = document.createElement("div");
-          lockedNote.className = "locked-note";
-          lockedNote.textContent = "Locked — grow more flowers";
-          plotEl.appendChild(lockedNote);
-        } else if (!plot) {
-          const emptyNote = document.createElement("div");
-          emptyNote.className = "empty-note";
-          emptyNote.textContent = STATE.storedSeeds > 0 ? "Click to plant a seed" : "No seed available";
-          plotEl.appendChild(emptyNote);
-        } else {
-          const flower = document.createElement("div");
-          flower.className = "flower";
-
-          const bloom = document.createElement("div");
-          bloom.className = "bloom";
-
-          const stem = document.createElement("div");
-          stem.className = "stem";
-
-          const leaves = document.createElement("div");
-          leaves.className = "leaves";
-
-          const leafLeft = document.createElement("div");
-          leafLeft.className = "leaf left";
-
-          const leafRight = document.createElement("div");
-          leafRight.className = "leaf right";
-
-          leaves.appendChild(leafLeft);
-          leaves.appendChild(leafRight);
-
-          if (plot.stage === 0) {
-            bloom.style.width = "12px";
-            bloom.style.height = "12px";
-            bloom.style.background = "#8b5a2b";
-            stem.style.height = "6px";
-            leaves.style.display = "none";
-          } else if (plot.stage === 1) {
-            bloom.style.width = "10px";
-            bloom.style.height = "10px";
-            bloom.style.background = "#6cc24a";
-            stem.style.height = "28px";
-          } else if (plot.stage === 2) {
-            bloom.style.width = "18px";
-            bloom.style.height = "18px";
-            bloom.style.background = plot.color;
-            stem.style.height = "44px";
-          } else {
-            bloom.style.width = "28px";
-            bloom.style.height = "28px";
-            bloom.style.background = plot.color;
-            stem.style.height = "58px";
-          }
-
-          flower.appendChild(bloom);
-          flower.appendChild(leaves);
-          flower.appendChild(stem);
-          plotEl.appendChild(flower);
-        }
-
-        gardenEl.appendChild(plotEl);
+      GAME.flowers.forEach(flower => {
+        flower.x -= GAME.speed;
+        flower.bob += 0.08;
       });
+
+      GAME.obstacles = GAME.obstacles.filter(obstacle => obstacle.x + obstacle.width > -30);
+      GAME.flowers = GAME.flowers.filter(flower => flower.x + flower.width > -30 && !flower.collected);
+
+      for (const flower of GAME.flowers) {
+        if (rectsOverlap(dinoA, flower) || rectsOverlap(dinoB, flower)) {
+          collectFlower(flower);
+          return;
+        }
+      }
+
+      for (const obstacle of GAME.obstacles) {
+        if (rectsOverlap(dinoA, obstacle) || rectsOverlap(dinoB, obstacle)) {
+          endRun();
+          return;
+        }
+      }
     }
 
     function drawBackground() {
-      ctx.fillStyle = "#ffffff";
-      ctx.fillRect(0, 0, GAME.width, GAME.height);
-
       const sky = ctx.createLinearGradient(0, 0, 0, GAME.height);
       sky.addColorStop(0, "#dff5ff");
       sky.addColorStop(0.65, "#f9fdff");
@@ -607,22 +1219,28 @@
       ctx.fillStyle = sky;
       ctx.fillRect(0, 0, GAME.width, GAME.height);
 
+      ctx.fillStyle = "#ffe8a8";
+      ctx.beginPath();
+      ctx.arc(800, 66, 28, 0, Math.PI * 2);
+      ctx.fill();
+
       ctx.fillStyle = "#c7edb6";
       ctx.fillRect(0, GAME.groundY, GAME.width, GAME.height - GAME.groundY);
 
       ctx.strokeStyle = "#9bcf8a";
       ctx.lineWidth = 2;
-      for (let i = 0; i < GAME.width; i += 40) {
+      for (let i = 0; i < GAME.width + 40; i += 40) {
+        const x = i - (GAME.distance % 40);
         ctx.beginPath();
-        ctx.moveTo(i - (GAME.distance % 40), GAME.groundY + 12);
-        ctx.lineTo(i + 18 - (GAME.distance % 40), GAME.groundY + 12);
+        ctx.moveTo(x, GAME.groundY + 12);
+        ctx.lineTo(x + 18, GAME.groundY + 12);
         ctx.stroke();
       }
 
       ctx.fillStyle = "#fff";
-      drawCloud(120 - (GAME.distance * 0.2 % 1000), 70, 1);
-      drawCloud(420 - (GAME.distance * 0.15 % 1100), 50, 0.9);
-      drawCloud(760 - (GAME.distance * 0.25 % 1200), 90, 1.1);
+      drawCloud(120 - (GAME.distance * 0.2 % 1040), 70, 1);
+      drawCloud(450 - (GAME.distance * 0.15 % 1120), 48, 0.9);
+      drawCloud(790 - (GAME.distance * 0.25 % 1240), 92, 1.1);
 
       ctx.fillStyle = "#d2b48c";
       ctx.fillRect(0, GAME.groundY - 2, GAME.width, 4);
@@ -646,7 +1264,6 @@
 
       ctx.fillStyle = dino.color;
       ctx.fillRect(0, 10, dino.width, dino.height - 10);
-
       ctx.fillRect(dino.width - 4, 0, 20, 18);
 
       ctx.fillStyle = "#fff";
@@ -665,178 +1282,453 @@
       ctx.restore();
     }
 
-    function drawSeed(seed) {
-      ctx.save();
-      ctx.translate(seed.x, seed.y);
+    function drawFlower(flower) {
+      const centerX = flower.x + flower.width / 2;
+      const bobY = Math.sin(flower.bob) * 3;
+      const centerY = flower.y + 13 + bobY;
 
-      ctx.fillStyle = "#7a4a24";
-      ctx.beginPath();
-      ctx.ellipse(0, 0, 7, 9, 0, 0, Math.PI * 2);
-      ctx.fill();
+      ctx.save();
+      ctx.lineCap = "round";
 
       ctx.strokeStyle = "#3f9b4b";
-      ctx.lineWidth = 2;
+      ctx.lineWidth = 4;
       ctx.beginPath();
-      ctx.moveTo(6, 2);
-      ctx.lineTo(14, -10);
+      ctx.moveTo(centerX, centerY + 8);
+      ctx.lineTo(centerX, flower.y + flower.height + bobY);
       ctx.stroke();
 
-      ctx.fillStyle = "#67c96b";
+      ctx.fillStyle = "#55ae58";
       ctx.beginPath();
-      ctx.ellipse(16, -12, 6, 3, -0.4, 0, Math.PI * 2);
+      ctx.ellipse(centerX - 6, centerY + 18, 7, 3.5, -0.5, 0, Math.PI * 2);
+      ctx.ellipse(centerX + 6, centerY + 23, 7, 3.5, 0.5, 0, Math.PI * 2);
       ctx.fill();
 
+      ctx.translate(centerX, centerY);
+      ctx.fillStyle = flower.color;
+      for (let petal = 0; petal < 6; petal++) {
+        ctx.save();
+        ctx.rotate((Math.PI * 2 * petal) / 6);
+        ctx.beginPath();
+        ctx.ellipse(0, -9, 6, 9, 0, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+      }
+
+      ctx.fillStyle = "#f5a623";
+      ctx.beginPath();
+      ctx.arc(0, 0, 5.5, 0, Math.PI * 2);
+      ctx.fill();
       ctx.restore();
     }
 
-    function drawObstacle(obs) {
-      if (obs.type === "rock") {
+    function drawObstacle(obstacle) {
+      if (obstacle.type === "rock") {
         ctx.fillStyle = "#7d7d7d";
         ctx.beginPath();
-        ctx.moveTo(obs.x, obs.y + obs.height);
-        ctx.lineTo(obs.x + 6, obs.y + 10);
-        ctx.lineTo(obs.x + obs.width / 2, obs.y);
-        ctx.lineTo(obs.x + obs.width - 6, obs.y + 12);
-        ctx.lineTo(obs.x + obs.width, obs.y + obs.height);
+        ctx.moveTo(obstacle.x, obstacle.y + obstacle.height);
+        ctx.lineTo(obstacle.x + 6, obstacle.y + 10);
+        ctx.lineTo(obstacle.x + obstacle.width / 2, obstacle.y);
+        ctx.lineTo(obstacle.x + obstacle.width - 6, obstacle.y + 12);
+        ctx.lineTo(obstacle.x + obstacle.width, obstacle.y + obstacle.height);
         ctx.closePath();
         ctx.fill();
       } else {
         ctx.fillStyle = "#8b5a2b";
-        ctx.fillRect(obs.x, obs.y + 8, obs.width, obs.height - 8);
+        ctx.fillRect(obstacle.x, obstacle.y + 8, obstacle.width, obstacle.height - 8);
         ctx.fillStyle = "#a06b35";
-        ctx.fillRect(obs.x + 4, obs.y + 2, obs.width - 8, 10);
+        ctx.fillRect(obstacle.x + 4, obstacle.y + 2, obstacle.width - 8, 10);
       }
+    }
+
+    function drawCenteredPanel(title, lines) {
+      ctx.fillStyle = "rgba(255, 250, 244, 0.91)";
+      ctx.fillRect(195, 84, 510, 164);
+      ctx.strokeStyle = "rgba(216, 195, 165, 0.9)";
+      ctx.lineWidth = 2;
+      ctx.strokeRect(195, 84, 510, 164);
+
+      ctx.textAlign = "center";
+      ctx.fillStyle = "#3d2f2f";
+      ctx.font = "bold 32px Trebuchet MS, Arial";
+      ctx.fillText(title, GAME.width / 2, 132);
+      ctx.font = "18px Trebuchet MS, Arial";
+      lines.forEach((line, index) => {
+        ctx.fillText(line, GAME.width / 2, 172 + index * 29);
+      });
+      ctx.textAlign = "start";
     }
 
     function drawUI() {
-      if (GAME.gameOver) {
-        ctx.fillStyle = "rgba(255,255,255,0.85)";
-        ctx.fillRect(220, 90, 460, 140);
-
-        ctx.fillStyle = "#3d2f2f";
-        ctx.font = "bold 34px Arial";
-        ctx.fillText("Run Ended", 370, 135);
-
-        ctx.font = "20px Arial";
-        ctx.fillText("Seeds brought home: " + GAME.runSeeds, 345, 175);
-        ctx.fillText("Press R to restart or Go Home to plant", 280, 205);
+      if (GAME.collectionFlash && GAME.collectionFlash.frames > 0) {
+        const opacity = Math.min(1, GAME.collectionFlash.frames / 16);
+        ctx.save();
+        ctx.globalAlpha = opacity;
+        ctx.fillStyle = "#8a4f70";
+        ctx.font = "bold 25px Trebuchet MS, Arial";
+        ctx.textAlign = "center";
+        ctx.fillText(GAME.collectionFlash.text, GAME.width / 2, 74);
+        ctx.restore();
+        GAME.collectionFlash.frames -= 1;
       }
-    }
 
-    function updateGame() {
-      if (GAME.playing) {
-        GAME.distance += GAME.speed;
-        GAME.speed += 0.0015;
-
-        updateDino(dinoA);
-        updateDino(dinoB);
-
-        GAME.nextObstacleTimer--;
-        GAME.nextSeedTimer--;
-
-        if (GAME.nextObstacleTimer <= 0) {
-          spawnObstacle();
-          GAME.nextObstacleTimer = 70 + Math.floor(Math.random() * 45);
-        }
-
-        if (GAME.nextSeedTimer <= 0) {
-          spawnSeed();
-          GAME.nextSeedTimer = 45 + Math.floor(Math.random() * 35);
-        }
-
-        GAME.obstacles.forEach(obs => {
-          obs.x -= GAME.speed;
-        });
-
-        GAME.seeds.forEach(seed => {
-          seed.x -= GAME.speed;
-        });
-
-        GAME.obstacles = GAME.obstacles.filter(obs => obs.x + obs.width > -20);
-        GAME.seeds = GAME.seeds.filter(seed => seed.x + seed.width > -20 && !seed.collected);
-
-        for (const seed of GAME.seeds) {
-          if (rectsOverlap(dinoA, seed) || rectsOverlap(dinoB, seed)) {
-            seed.collected = true;
-            GAME.runSeeds++;
-            updateStats();
-          }
-        }
-
-        for (const obs of GAME.obstacles) {
-          if (rectsOverlap(dinoA, obs) || rectsOverlap(dinoB, obs)) {
-            endRun();
-            break;
-          }
-        }
+      if (STATE.completed && !birthdayOverlay.classList.contains("show")) {
+        drawCenteredPanel("Birthday Surprise Unlocked!", [
+          "28 points collected — the garden is complete.",
+          "Use Watch Fireworks to celebrate again."
+        ]);
+      } else if (GAME.gameOver) {
+        drawCenteredPanel("The Dinos Tripped!", [
+          "Your birthday flowers are safe.",
+          "Press R or tap Restart Run to continue."
+        ]);
       }
     }
 
     function drawGame() {
       drawBackground();
-
-      GAME.seeds.forEach(drawSeed);
+      GAME.flowers.forEach(drawFlower);
       GAME.obstacles.forEach(drawObstacle);
-
       drawDino(dinoA, 0);
       drawDino(dinoB, 8);
-
       drawUI();
     }
 
-    function loop() {
+    function gameLoop() {
       updateGame();
       drawGame();
-      requestAnimationFrame(loop);
+      window.requestAnimationFrame(gameLoop);
     }
 
-    window.addEventListener("keydown", (e) => {
-      if (e.code === "Space" || e.code === "ArrowUp") {
-        e.preventDefault();
+    function createPlaceholder(filename, compact = false) {
+      const placeholder = document.createElement("div");
+      placeholder.className = "media-placeholder";
+      if (compact) placeholder.style.minHeight = "100%";
+
+      const content = document.createElement("div");
+      const icon = document.createElement("span");
+      icon.textContent = "📷";
+      const text = document.createElement("strong");
+      text.textContent = `Add ${filename}`;
+      content.append(icon, text);
+      placeholder.appendChild(content);
+      return placeholder;
+    }
+
+    function createMedia(mediaItem, compact = false) {
+      if (mediaItem.type === "video") {
+        const video = document.createElement("video");
+        video.controls = !compact;
+        video.preload = "metadata";
+        video.playsInline = true;
+        video.src = mediaItem.src;
+        if (mediaItem.poster) video.poster = mediaItem.poster;
+        if (compact) video.muted = true;
+        video.addEventListener("error", () => {
+          video.replaceWith(createPlaceholder(mediaItem.src, compact));
+        }, { once: true });
+        return video;
+      }
+
+      const image = document.createElement("img");
+      image.src = mediaItem.src;
+      image.alt = mediaItem.alt || "Birthday memory";
+      image.loading = compact ? "lazy" : "eager";
+      image.addEventListener("error", () => {
+        image.replaceWith(createPlaceholder(mediaItem.src, compact));
+      }, { once: true });
+      return image;
+    }
+
+    function renderMemoryGarden() {
+      memoryGardenEl.replaceChildren();
+
+      BIRTHDAY_MEMORIES.forEach((memory, index) => {
+        const unlocked = STATE.birthdayPoints >= memory.points;
+        const card = document.createElement("button");
+        card.type = "button";
+        card.className = "memory-card" + (unlocked ? "" : " locked");
+        card.disabled = !unlocked;
+        card.setAttribute("aria-label", unlocked ? `Open ${memory.title}` : `${memory.title} is locked`);
+
+        const preview = document.createElement("div");
+        preview.className = "memory-preview";
+
+        if (unlocked && memory.media.length > 0) {
+          preview.appendChild(createMedia(memory.media[0], true));
+        } else {
+          const flower = document.createElement("span");
+          flower.className = "preview-flower";
+          flower.textContent = memory.flower;
+          preview.appendChild(flower);
+        }
+
+        if (!unlocked) {
+          const lockLayer = document.createElement("div");
+          lockLayer.className = "lock-layer";
+          const lockCopy = document.createElement("div");
+          lockCopy.innerHTML = `<span aria-hidden="true">🔒</span><strong>Unlock at ${memory.points} points</strong>`;
+          lockLayer.appendChild(lockCopy);
+          preview.appendChild(lockLayer);
+        }
+
+        const copy = document.createElement("div");
+        copy.className = "memory-card-copy";
+        const label = document.createElement("small");
+        label.textContent = `${memory.flower} Flower ${index + 1} · ${memory.points} points`;
+        const title = document.createElement("h3");
+        title.textContent = unlocked ? memory.title : "A Memory Is Waiting";
+        copy.append(label, title);
+
+        card.append(preview, copy);
+        if (unlocked) card.addEventListener("click", () => openMemory(index, false));
+        memoryGardenEl.appendChild(card);
+      });
+    }
+
+    function openMemory(index, resumeAfterClose) {
+      const memory = BIRTHDAY_MEMORIES[index];
+      if (!memory || STATE.birthdayPoints < memory.points) return;
+
+      resumeGameAfterMemory = resumeAfterClose;
+      GAME.playing = false;
+      memoryModalContent.replaceChildren();
+
+      const heading = document.createElement("header");
+      heading.className = "modal-heading";
+      const eyebrow = document.createElement("div");
+      eyebrow.className = "eyebrow";
+      eyebrow.textContent = `${memory.flower} ${memory.points} birthday points`;
+      const title = document.createElement("h2");
+      title.id = "memoryTitle";
+      title.textContent = memory.title;
+      const subtitle = document.createElement("p");
+      subtitle.textContent = memory.subtitle;
+      heading.append(eyebrow, title, subtitle);
+
+      const grid = document.createElement("div");
+      grid.className = "media-grid" + (memory.media.length === 1 ? " single" : "");
+
+      memory.media.forEach(mediaItem => {
+        const frame = document.createElement("figure");
+        frame.className = "media-frame";
+        frame.style.margin = "0";
+        frame.appendChild(createMedia(mediaItem));
+
+        if (mediaItem.caption) {
+          const caption = document.createElement("figcaption");
+          caption.className = "media-caption";
+          caption.textContent = mediaItem.caption;
+          frame.appendChild(caption);
+        }
+        grid.appendChild(frame);
+      });
+
+      const message = document.createElement("p");
+      message.className = "memory-message";
+      message.textContent = memory.message;
+
+      memoryModalContent.append(heading, grid, message);
+      memoryContinueBtn.textContent = resumeAfterClose ? "Continue Adventure" : "Back to Memory Garden";
+      memoryModal.classList.add("show");
+      memoryModal.setAttribute("aria-hidden", "false");
+      window.setTimeout(() => closeMemoryBtn.focus(), 50);
+    }
+
+    function closeMemory() {
+      if (!memoryModal.classList.contains("show")) return;
+      memoryModal.classList.remove("show");
+      memoryModal.setAttribute("aria-hidden", "true");
+
+      const shouldResume = resumeGameAfterMemory && !STATE.completed && !GAME.gameOver && !runScreen.classList.contains("hidden");
+      resumeGameAfterMemory = false;
+      if (shouldResume) GAME.playing = true;
+    }
+
+    function resizeFireworksCanvas() {
+      const ratio = Math.min(window.devicePixelRatio || 1, 2);
+      fireworksCanvas.width = Math.floor(window.innerWidth * ratio);
+      fireworksCanvas.height = Math.floor(window.innerHeight * ratio);
+      fireworksCanvas.style.width = window.innerWidth + "px";
+      fireworksCanvas.style.height = window.innerHeight + "px";
+      fireworksCtx.setTransform(ratio, 0, 0, ratio, 0, 0);
+    }
+
+    function launchFireworkBurst(x, y) {
+      const colors = ["#ff7aa2", "#ffd166", "#72ddf7", "#c77dff", "#7bd389", "#ffffff"];
+      const color = colors[Math.floor(Math.random() * colors.length)];
+      const particleCount = 58;
+
+      for (let index = 0; index < particleCount; index++) {
+        const angle = (Math.PI * 2 * index) / particleCount + Math.random() * 0.1;
+        const velocity = 2.1 + Math.random() * 4.4;
+        fireworksParticles.push({
+          x,
+          y,
+          vx: Math.cos(angle) * velocity,
+          vy: Math.sin(angle) * velocity,
+          gravity: 0.045 + Math.random() * 0.025,
+          drag: 0.985,
+          alpha: 1,
+          decay: 0.009 + Math.random() * 0.012,
+          size: 1.5 + Math.random() * 2.4,
+          color
+        });
+      }
+    }
+
+    function randomFirework() {
+      const x = window.innerWidth * (0.12 + Math.random() * 0.76);
+      const y = window.innerHeight * (0.1 + Math.random() * 0.5);
+      launchFireworkBurst(x, y);
+    }
+
+    function animateFireworks() {
+      fireworksCtx.clearRect(0, 0, window.innerWidth, window.innerHeight);
+      fireworksCtx.globalCompositeOperation = "lighter";
+
+      fireworksParticles.forEach(particle => {
+        particle.vx *= particle.drag;
+        particle.vy = particle.vy * particle.drag + particle.gravity;
+        particle.x += particle.vx;
+        particle.y += particle.vy;
+        particle.alpha -= particle.decay;
+
+        fireworksCtx.save();
+        fireworksCtx.globalAlpha = Math.max(0, particle.alpha);
+        fireworksCtx.fillStyle = particle.color;
+        fireworksCtx.beginPath();
+        fireworksCtx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
+        fireworksCtx.fill();
+        fireworksCtx.restore();
+      });
+
+      fireworksParticles = fireworksParticles.filter(particle => particle.alpha > 0);
+      fireworksCtx.globalCompositeOperation = "source-over";
+      fireworksAnimationId = window.requestAnimationFrame(animateFireworks);
+    }
+
+    function startFireworks() {
+      stopFireworks();
+      resizeFireworksCanvas();
+      fireworksParticles = [];
+      animateFireworks();
+
+      [80, 260, 470, 720].forEach(delay => {
+        fireworksTimeouts.push(window.setTimeout(randomFirework, delay));
+      });
+      fireworksLaunchTimer = window.setInterval(randomFirework, 560);
+    }
+
+    function stopFireworks() {
+      if (fireworksAnimationId !== null) window.cancelAnimationFrame(fireworksAnimationId);
+      if (fireworksLaunchTimer !== null) window.clearInterval(fireworksLaunchTimer);
+      fireworksTimeouts.forEach(timeout => window.clearTimeout(timeout));
+      fireworksTimeouts = [];
+      fireworksAnimationId = null;
+      fireworksLaunchTimer = null;
+      fireworksParticles = [];
+    }
+
+    function triggerBirthdayCelebration() {
+      STATE.completed = true;
+      STATE.flowersCollected = FLOWERS_TO_FINISH;
+      STATE.birthdayPoints = MAX_POINTS;
+      GAME.playing = false;
+      GAME.gameOver = false;
+      saveState();
+      updateStats();
+
+      birthdayOverlay.classList.add("show");
+      birthdayOverlay.setAttribute("aria-hidden", "false");
+      startFireworks();
+      window.setTimeout(() => openGardenBtn.focus(), 650);
+    }
+
+    function closeCelebrationToGarden() {
+      birthdayOverlay.classList.remove("show");
+      birthdayOverlay.setAttribute("aria-hidden", "true");
+      stopFireworks();
+      showGardenScreen();
+    }
+
+    function resetAdventure() {
+      const confirmed = window.confirm("Reset all four flowers, birthday points, and unlocked memories?");
+      if (!confirmed) return;
+
+      STATE.birthdayPoints = 0;
+      STATE.flowersCollected = 0;
+      STATE.completed = false;
+      saveState();
+      closeMemory();
+      birthdayOverlay.classList.remove("show");
+      birthdayOverlay.setAttribute("aria-hidden", "true");
+      stopFireworks();
+      showRunScreen();
+    }
+
+    window.addEventListener("keydown", event => {
+      if (event.code === "Escape" && memoryModal.classList.contains("show")) {
+        closeMemory();
+        return;
+      }
+
+      if (isBlockingOverlayOpen()) return;
+
+      if (event.code === "Space" || event.code === "ArrowUp") {
+        event.preventDefault();
         jump();
       }
-      if (e.code === "ArrowDown") {
-        e.preventDefault();
+      if (event.code === "ArrowDown") {
+        event.preventDefault();
         setDuck(true);
       }
-      if (e.code === "KeyR" && GAME.gameOver) {
+      if (event.code === "KeyR" && GAME.gameOver && !STATE.completed) {
         resetRun();
       }
     });
 
-    window.addEventListener("keyup", (e) => {
-      if (e.code === "ArrowDown") {
-        setDuck(false);
-      }
+    window.addEventListener("keyup", event => {
+      if (event.code === "ArrowDown") setDuck(false);
     });
 
-    goHomeBtn.addEventListener("click", () => {
-      if (!GAME.gameOver) {
-        STATE.storedSeeds += GAME.runSeeds;
-        GAME.runSeeds = 0;
-        GAME.playing = false;
-      } else {
-        GAME.runSeeds = 0;
-      }
-      updateStats();
-      showHomeScreen();
+    window.addEventListener("blur", () => setDuck(false));
+    window.addEventListener("resize", () => {
+      if (birthdayOverlay.classList.contains("show")) resizeFireworksCanvas();
     });
 
-    startRunBtn.addEventListener("click", () => {
-      showRunScreen();
-      resetRun();
+    canvas.addEventListener("pointerdown", event => {
+      event.preventDefault();
+      jump();
     });
 
-    advanceGrowthBtn.addEventListener("click", () => {
-      advanceFlowerGrowth();
-      renderGarden();
-      updateStats();
+    jumpBtn.addEventListener("click", jump);
+    duckBtn.addEventListener("pointerdown", event => {
+      event.preventDefault();
+      setDuck(true);
     });
+    ["pointerup", "pointercancel", "pointerleave"].forEach(eventName => {
+      duckBtn.addEventListener(eventName, () => setDuck(false));
+    });
+
+    restartBtn.addEventListener("click", resetRun);
+    goGardenBtn.addEventListener("click", showGardenScreen);
+    backToRunBtn.addEventListener("click", showRunScreen);
+    resetProgressBtn.addEventListener("click", resetAdventure);
+    showCelebrationBtn.addEventListener("click", triggerBirthdayCelebration);
+    gardenCelebrateBtn.addEventListener("click", triggerBirthdayCelebration);
+
+    closeMemoryBtn.addEventListener("click", closeMemory);
+    memoryContinueBtn.addEventListener("click", closeMemory);
+    memoryModal.addEventListener("click", event => {
+      if (event.target === memoryModal) closeMemory();
+    });
+
+    openGardenBtn.addEventListener("click", closeCelebrationToGarden);
+    replayFireworksBtn.addEventListener("click", startFireworks);
 
     updateStats();
-    renderGarden();
     resetRun();
-    loop();
+    gameLoop();
   </script>
 </body>
 </html>
