@@ -1,10 +1,13 @@
 <!DOCTYPE html>
-<!-- DINO FINAL 9-PHOTO BUILD — verified 2026-08-26 03:55 MYT -->
+<!-- DINO CAPTIONS + BLUE DINOS BUILD — verified 2026-08-26 05:25 MYT -->
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="theme-color" content="#fff7ed" />
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <meta http-equiv="Expires" content="0" />
   <title>Dino Birthday Garden</title>
 
   <!--
@@ -793,7 +796,7 @@
     <canvas id="fireworksCanvas" aria-hidden="true"></canvas>
     <section class="celebration-card">
       <div class="celebration-flower-line">🌼 🌷 🌸 🌹</div>
-      <div class="celebration-dinos" aria-hidden="true">🦖 💗 🦖</div>
+      <div class="celebration-dinos" aria-hidden="true">🦕 💗 🦕</div>
       <h2 id="birthdayTitle">Happy Birthday, Dino!</h2>
       <p>Four flowers, twenty-eight points, and a whole garden of memories made for you.</p>
       <div class="celebration-actions">
@@ -809,6 +812,9 @@
     /* ================================================================
        EDIT YOUR PHOTOS, CAPTIONS, AND MESSAGES IN THIS SECTION ONLY.
 
+       caption: text shown directly UNDER an individual photo.
+       message: text shown inside the large PINK box below that memory's photos.
+
        The photos below use the direct GitHub Pages image folder, so they work
        both on the deployed site and when this HTML file is opened for preview.
        You may add or remove media entries inside each memory.
@@ -817,7 +823,7 @@
        { type: "video", src: "videos/our-video.mp4", caption: "A caption" }
        ================================================================ */
     const PHOTO_BASE_URL = "https://teblurrry.github.io/dinohoseed/photos/";
-    const PHOTO_CACHE_VERSION = "20260826-0328";
+    const PHOTO_CACHE_VERSION = "20260826-0525";
 
     function photoUrl(filename) {
       return PHOTO_BASE_URL + encodeURIComponent(filename);
@@ -835,6 +841,7 @@
             type: "image",
             src: photoUrl("4fb6e194-c1b4-453c-9180-adaa15260fc6.JPG"),
             alt: "Our first memory",
+            // PHOTO 1 CAPTION — edit the quoted text on the next line.
             caption: "Replace this with your first photo caption."
           }
         ]
@@ -850,12 +857,14 @@
             type: "image",
             src: photoUrl("580d0f31-97cc-4ad6-8bc5-d5d40f51cbef.JPG"),
             alt: "A favourite moment together",
+            // PHOTO 2 CAPTION — edit the quoted text on the next line.
             caption: "Replace this with your second photo caption."
           },
           {
             type: "image",
             src: photoUrl("IMG_0708.jpg"),
             alt: "Another favourite moment together",
+            // PHOTO 3 CAPTION — edit the quoted text on the next line.
             caption: "You can keep two photos here or remove either entry."
           }
         ]
@@ -871,12 +880,14 @@
             type: "image",
             src: photoUrl("IMG_0712.jpg"),
             alt: "A silly or lovely memory",
+            // PHOTO 4 CAPTION — edit the quoted text on the next line.
             caption: "like the flowers🌧️🌼."
           },
           {
             type: "image",
             src: photoUrl("IMG_0957.jpg"),
             alt: "Another silly or lovely memory",
+            // PHOTO 5 CAPTION — edit the quoted text on the next line.
             caption: "us and paws🦕🦕🐾🐾."
           }
         ]
@@ -892,24 +903,28 @@
             type: "image",
             src: photoUrl("IMG_0961.jpg"),
             alt: "Birthday finale memory one",
+            // PHOTO 6 CAPTION — edit the quoted text on the next line.
             caption: "our lil cactus."
           },
           {
             type: "image",
             src: photoUrl("IMG_1981.jpg"),
             alt: "Birthday finale memory two",
+            // PHOTO 7 CAPTION — edit the quoted text on the next line.
             caption: "Hey Orange!🐈👒👒"
           },
           {
             type: "image",
             src: photoUrl("WhatsApp Image 2025-10-18 at 23.04.53.jpeg"),
             alt: "Birthday finale memory three",
+            // PHOTO 8 CAPTION — edit the quoted text on the next line.
             caption: "Our first spot hehe"
           },
           {
             type: "image",
             src: photoUrl("ae6affd4-9bbb-42b7-ad2a-97d24efb3b44.JPG"),
             alt: "Birthday finale memory four",
+            // PHOTO 9 CAPTION — edit the quoted text on the next line.
             caption: "Dinosaur couple's sunny day picnic nearby the lake with rambutan yum"
           }
         ]
